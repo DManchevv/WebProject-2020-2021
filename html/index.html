@@ -7,13 +7,13 @@
         <link rel="stylesheet" href="../css/table-styles.css" />
         <title>Document</title>
         <script defer src="../js/sendRequestUtility.js"></script>
-        <script defer src="../js/userSpecification.js"></script>
         <script defer src="../js/createTable.js"></script>  <!--Moved this script here - Velin-->
         <script defer src="../js/saveTable.js"></script>
         <script defer src="../js/lock.js"></script>
         <script src="../js/exportAsCSV.js"></script>
-        <script defer src="../js/getSavedTable.js"></script>
+        <!--<script defer src="../js/getSavedTable.js"></script>-->
         <script defer src="../js/newDocument.js"></script>
+        <script defer src="../js/userSpecification.js"></script>
         <script>
             var conn = null;
 			var isConnected = false;
@@ -23,10 +23,20 @@
 			});
 
 			function setOnline() {
+				//document.getElementById("status").classList.remove("label-warning");
+				//document.getElementById("status").classList.add("label-success");
+				//document.getElementById("status").innerHTML = "Connected";
+				//document.getElementsByClassName("connect")[0].style.display = "none";
+				document.getElementById("offlineActions").style.display = "none";
 				isConnected = true;
 			}
 
 			function setOffline() {
+				//document.getElementById("status").classList.add("label-warning");
+				//document.getElementById("status").classList.remove("label-success");
+				//document.getElementById("status").innerHTML = "Disconnected";
+				//document.getElementsByClassName("connect")[0].innerHTML = "Connect";
+				document.getElementById("offlineActions").style.display = "initial";
 				isConnected = false;
 			}
 
@@ -88,9 +98,13 @@
 						for (key in cellsCss) {
 							document.getElementById(key).style.cssText = cellsCss[key];
 						}
+                        isUserLoggedIn(); // Added 18.06.2021 If the user is logged in from $_SESSION
+										  // then we will load the loggedUserFunctions
+                            
 					}
 					else if (text[0] === "loadIcons") {
 						let clients = JSON.parse(text[1]);
+						console.log(clients);
 
 						for (key in clients) {
 							loadGuestUser("user"+clients[key]);
@@ -116,6 +130,18 @@
 						console.log(text[1]);
 						document.getElementById(text[1]).remove();
 					}
+                    if (text[0].includes("loggedUserChangeCell")) {	// Added 18.06.2021
+						var currentCell = document.querySelector(`#${text[1]}`);
+						let userOwner = text[0].split('_')[1];
+						console.log(userOwner);
+						if (text[2].length > 0) {
+                        	currentCell.removeAttribute("contenteditable");
+							currentCell.setAttribute("owner", userOwner);
+						} else if (text[2].length === 0) {
+							currentCell.setAttribute("contenteditable", "");
+							currentCell.removeAttribute("owner");
+						}
+                    }
 				}
 
 				conn.onopen = function(e) {
@@ -141,11 +167,11 @@
         <h3>This is a websocket demo using basic websockets</h3>
 
 		<div id="offlineActions">
-			<div>Server IP: <input type="text" id="conn_str" value='ws://109.121.242.75:8090'/></div>
+			<div>Server IP: <input type="text" id="conn_str" value='ws://192.168.0.106:8090'/></div>
 
 		</div>
 		</div>
-        <button onclick="exportTableToCSV('table.csv')" class="export">Export HTML Table To CSV File</button>
+        <button onclick="exportTableToCSV('table.csv')">Export HTML Table To CSV File</button>
         <input type="file" id="fileUpload" />
         <input type="button" id="upload" value="Upload" onclick="importCSV()" />
         <div id="dvCSV"></div>
@@ -153,7 +179,7 @@
             <aside id="table-info">
                 <a href="register.html"><button id="register-btn">Register</button></a>
                 <a href="login.html"><button id="login-btn">Log In</button></a>
-                <button id="save">Save</button>
+                <button id="save">save</button>
                 <button id="new-document">New Document</button>
             </aside>
         </header>

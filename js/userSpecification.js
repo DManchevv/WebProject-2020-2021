@@ -1,20 +1,19 @@
 const anonymous = ["rhino", "tiger", "leopard", "elephant"];
+var username;
 
-(function () {
+function isUserLoggedIn() {
     const url = "../php/currentUser.php";
-
     sendRequest(url, { method: 'GET' }, load, console.log);
-})();
-
+}
 function load(response) {
     if (response.success) {
         if (response["username"] && response["type"]) {
-            // loadLoggedUser();
-            /*
-            var liTextNode = document.createTextNode(response["username"]);
-            */
+            username = response["username"];
+            loadLoggedUser();
+            return true;
+            
         } else {
-            // loadGuestUser();
+            return false;
         }
     } else {
         /*var error = document.querySelector('.error');
@@ -60,6 +59,20 @@ function loadLoggedUser() {
 
     var tableInfo = document.querySelector("#table-info");
     tableInfo.appendChild(logout);
+
+    var tableCells = document.querySelectorAll(".table-cell");
+    //console.log(tableCells);
+    tableCells.forEach(td => {
+        td.addEventListener('input', () => {
+            if (conn != null) {
+                conn.send(`loggedUserChangeCell_${username}-` + td.id + "-" + td.innerText);
+                td.setAttribute("owner", `${username}`);
+            }
+            if (td.innerText === "" && td.getAttribute) {
+                td.removeAttribute("owner");
+            }
+        });
+    });
 }
 
 function logoutUser() {
@@ -86,4 +99,22 @@ function imageFunctionality(userImg, text) {
     userImg.addEventListener("mouseleave", function(event) {
         text.style.visibility = "hidden";
     });
+}
+
+function sendRequest(url, options, successCallback, errorCallback) { 
+    var request = new XMLHttpRequest();
+
+    request.onload = function() { 
+        var response = JSON.parse(request.responseText);
+
+        if (request.status === 200) {
+            successCallback(response);
+        } else {
+            errorCallback(response);
+        }
+    };
+
+    request.open(options.method, url, true);
+    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    request.send(options.data);
 }

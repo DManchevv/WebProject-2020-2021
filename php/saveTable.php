@@ -9,10 +9,17 @@
         $db = new TableDatabase();
 
         //print_r($data);
-        $query = $db->saveTable($data);
+        foreach ($data as $element) {
+            //print_r($element);
+            $query = $db->saveTable($element);
+            if (!$query["success"]) {
+                $errors[] = $query;
+            }
+        }
+        /*$query = $db->saveTable($data);
         if (!$query["success"]) {
             $errors[] = $query;
-        }
+        }*/
     } else {
         $errors[] = 'Invalid request';
     }

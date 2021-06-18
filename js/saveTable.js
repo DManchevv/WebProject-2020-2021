@@ -13,6 +13,8 @@ function saveTable() {
     
     const url = "../php/saveTable.php";
 
+    var tableCells = [];
+
     table.forEach(element => {
         var indexOfDiv = element.innerHTML.indexOf("<div class=");
         var innerValue;
@@ -26,8 +28,11 @@ function saveTable() {
             class: element.classList.value,
             innervalue: innerValue
         }
-        sendRequest(url, { method: 'POST', data: `data=${JSON.stringify(tableCell)}` }, load, console.log);
+        tableCells.push(tableCell);
+        //sendRequest(url, { method: 'POST', data: `data=${JSON.stringify(tableCell)}` }, load, console.log);
     });
+
+    sendRequest(url, { method: 'POST', data: `data=${JSON.stringify(tableCells)}` }, load, console.log);
 }
 
 function load(response) {

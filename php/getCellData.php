@@ -3,21 +3,20 @@
 
     $errors = [];
     $response = [];
-    if (isset($_POST)) {
+    if (isset($_GET)) {
         //print_r($_POST);
-        $id = json_decode($_POST["data"], true);
+        //$id = json_decode($_POST["data"], true);
         
         //print_r($id);
         
         $db = new TableDatabase();
 
-        $query = $db->getTableByID($id);
+        $query = $db->getSavedTableInfo();
         if ($query["success"]) {
-            $data = $query["data"]->fetch(PDO::FETCH_ASSOC);
+            $data = $query["data"]->fetchAll(PDO::FETCH_ASSOC);
             if (!$data) {
                 $response = ["success" => true, "data" => false];
             } else {
-                //print_r($data);
                 $response = ["success" => true, "data" => $data];
             }
         } else {
