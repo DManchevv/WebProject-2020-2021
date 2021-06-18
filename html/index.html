@@ -95,7 +95,6 @@
 				}
 				else if (text[0] === "loadIcons") {
 					let clients = JSON.parse(text[1]);
-					console.log(clients);
 
 					for (key in clients) {
 						loadGuestUser("user" + clients[key]);
@@ -118,8 +117,15 @@
 					document.getElementById(text[1]).style.cssText = cssCode;
 				}
 				else if (text[0] === "removeIcon") {
-					console.log(text[1]);
 					document.getElementById(text[1]).remove();
+
+					let currentIcons = document.querySelectorAll('.user-img');
+
+					for (let i = 0; i < currentIcons.length; i++) {
+						currentIcons[i].style.position = "relative";
+						currentIcons[i].style.left = `${(-25)*i}px`;
+					}
+
 				}
 				else if (text[0] === "addStyle") {
 					let cssCode = text[2].replace(/~/g, "-");
@@ -166,7 +172,7 @@
 	<div id="offlineActions">
 		<div>Server IP: <input type="text" id="conn_str" value='ws://109.121.242.75:8090' /></div>
 	</div>
-	</div>
+
 	<button onclick="exportTableToCSV('table.csv')">Export HTML Table To CSV File</button>
 	<input type="file" id="fileUpload" />
 	<input type="button" id="upload" value="Upload" onclick="importCSV()" />
@@ -183,6 +189,9 @@
 	<div class="context-menu context-menu-hidden" id="context-menu">
 		<span id="lock-cell">Lock</span>
 		<span id="custom-css">Custom CSS</span>
+	</div>
+	<div id="tableWrapper">
+		
 	</div>
 	<script src="../js/customCss.js"></script>
 	<script src="../js/fixRowsAndColumns.js"></script>

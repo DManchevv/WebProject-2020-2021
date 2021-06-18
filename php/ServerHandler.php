@@ -73,7 +73,7 @@
                 $cssCode = str_replace("~","-",$strings[2]);
                 $this->cellsCSS[$strings[1]] = $cssCode;
             }
-            
+
             if ($strings[0] === "editServerCellsArray") {
                 $this->cells[$strings[1]] = $strings[2];
             }

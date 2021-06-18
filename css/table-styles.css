@@ -1,5 +1,9 @@
-.body {
-    overflow-x: scroll;
+* {
+    box-sizing: border-box;
+}
+
+body {
+    height: 100%;
 }
 
 .table-cell {
@@ -7,6 +11,7 @@
     min-height: 40px;
     min-width: 130px;
     outline-color: rgb(126, 126, 126);
+    padding: 10px 20px;
 }
 
 .row-index {
@@ -19,19 +24,28 @@
     text-align: center;
 }
 
-.main-table {
-    border-collapse: collapse;
-    border: 0.5px solid black;
+#tableWrapper {
+    overflow-x: auto;
 }
 
-tr:nth-child(2n+3) {
-    background: #6b6b6b12;
+.main-table {
+    border-collapse: collapse;
+    border: 0;
+}
+
+tr:nth-child(even) , tr:nth-child(even) td:first-child {
+    background-color: #efefef;
+}
+
+tr:nth-child(odd):not(:first-child) td:first-child {
+    background-color: white;
 }
 
 tr:first-child {
     background: #362f4b;
     color: #dcd9e4;
-    font-size: 20px;
+    font-size: 16px;
+    font-weight: bold;
 }
 
 .main-table tbody tr:first-child td:first-child {
@@ -39,13 +53,16 @@ tr:first-child {
 }
 
 .main-table tbody tr:not(:first-child) td:first-child {
-    background-color: #362f4b;
-    color: #dcd9e4;
-    font-size: 20px;
+    position: sticky;
+    left: 0;
+    font-size: 16px;
+    padding: 0 20px;
+    font-weight: bold;
+    z-index: 10;
 }
 
 td {
-    border: 0px;
+    border: 0;
 }
 
 .context-menu {
@@ -75,17 +92,20 @@ td {
     height: 3.5rem;
     display: flex;
     align-items: baseline;
+    position: relative;
 }
 
 .user-img {
-    height: 2.5rem;
+    border-radius: 50%;
+    border: 4px solid white;
+    height: 50px;
+    width: 50px;
 }
 
 .user-content{
     position: relative;
     width: 50px;
     height: 50px;
-    float: left;
     margin-right: 10px;
 }
    

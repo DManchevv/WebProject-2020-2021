@@ -1,4 +1,21 @@
-const anonymous = ["rhino", "tiger", "leopard", "elephant"];
+const anonymous = [
+    "bird", 
+    "crocodile", 
+    "elephant",
+    "giraffe",
+    "kangaroo",
+    "koala",
+    "leopard",
+    "nevmenqem",
+    "octopus",
+    "rhino",
+    "snake",
+    "squirrel",
+    "tiger",
+    "turtle",
+    "zebra"    
+];
+
 var username;
 
 function isUserLoggedIn() {
@@ -26,23 +43,35 @@ function loadGuestUser(id) {
 
     const randomImg = Math.floor(Math.random() * anonymous.length);
 
-    var section = document.createElement("section");
-    section.classList.add("user-content");
-    section.setAttribute('id', id);
+    // var section = document.createElement("section");
+    // section.classList.add("user-content");
+    // section.setAttribute('id', id);
 
-    var text = document.createElement("figcaption");
-    text.innerHTML = `anonymous: ${anonymous[randomImg]}`;
-    section.appendChild(text);
+ 
+
+    // var text = document.createElement("figcaption");
+    // text.innerHTML = `anonymous ${anonymous[randomImg]}`;
+    // section.appendChild(text);
 
 
     var userImg = document.createElement("img");
     userImg.classList.add("user-img");
     userImg.setAttribute("src", `../images/${anonymous[randomImg]}.png`);
-    imageFunctionality(userImg, text);
+    userImg.setAttribute('id', id);
+    userImg.title = `anonymous ${anonymous[randomImg]}`;
+    // imageFunctionality(userImg, text);
 
-    section.appendChild(userImg);
+    // section.appendChild(userImg);
     
-    tableInfo.appendChild(section);
+    // tableInfo.appendChild(section);
+    tableInfo.appendChild(userImg);
+
+    let iconsCount = document.querySelectorAll('.user-img').length;
+
+    if (iconsCount > 1) {
+        userImg.style.position = "relative";
+        userImg.style.left = `${-25*(iconsCount - 1)}px`;
+    }
 }
 
 function loadLoggedUser() {
@@ -87,19 +116,19 @@ function goToLogin(response) {
     }
 }
 
-function imageFunctionality(userImg, text) {
+// function imageFunctionality(userImg, text) {
     
-    userImg.addEventListener("mouseenter", function(event) {
-        text.style.width = "110px";
-        text.style.padding = "auto";
-        text.style.visibility = "visible";
-        text.style.opacity = 1;
-    });
+//     userImg.addEventListener("mouseenter", function(event) {
+//         text.style.width = "110px";
+//         text.style.padding = "auto";
+//         text.style.visibility = "visible";
+//         text.style.opacity = 1;
+//     });
 
-    userImg.addEventListener("mouseleave", function(event) {
-        text.style.visibility = "hidden";
-    });
-}
+//     userImg.addEventListener("mouseleave", function(event) {
+//         text.style.visibility = "hidden";
+//     });
+// }
 
 function sendRequest(url, options, successCallback, errorCallback) { 
     var request = new XMLHttpRequest();

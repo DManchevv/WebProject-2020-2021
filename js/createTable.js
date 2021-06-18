@@ -100,7 +100,9 @@ function tableCreate(rows, columns) {
         tbdy.appendChild(tr);
     }
     tbl.appendChild(tbdy);
-    body.appendChild(tbl);
+    let tableWrapper = document.getElementById('tableWrapper');
+    
+    tableWrapper.appendChild(tbl);
 }
 
 function columnToLetter(column)
