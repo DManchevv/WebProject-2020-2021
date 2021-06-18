@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Register</title>
+        <meta charset="utf-8" />
+        <script defer src="../js/sendRequestUtility.js"></script>
+        <script defer src="../js/register.js"></script>
+    </head>
+    <body>
+        <main id="register-form">
+            <form>
+                <section>
+                    <input id="email" type="email" placeholder="email" required>
+                    <aside>
+                        <label class="error emailError"></label>
+                    </aside>
+                </section>
+                <section>
+                    <input id="username" type="text" placeholder="username" required>
+                    <aside>
+                        <label class="error usernameError"></label>
+                    </aside>
+                </section>
+                <section>
+                    <input id="password" type="password" placeholder="password" required>
+                    <aside>
+                        <label class="error passwordError"></label>
+                    </aside>
+                </section>
+                <section>
+                    <input id="confirm-password" type="password" placeholder="confirm password" required>
+                    <aside>
+                        <label class="error confirmPasswordError"></label>
+                    </aside>
+                </section>
+                <input id="register" type="submit" title="SIGN UP" value="SIGN UP">
+                <section>
+                    <label class="error userExistsError"></label>
+                    <label id="success"></label>
+                </section>
+            </form>
+        </main>
+    </body>
+</html>
