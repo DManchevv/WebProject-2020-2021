@@ -19,6 +19,32 @@
     text-align: center;
 }
 
+.main-table {
+    border-collapse: collapse;
+    border: 0.5px solid black;
+}
+
+tr:nth-child(2n+3) {
+    background: #6b6b6b12;
+}
+
+tr:first-child {
+    background: #362f4b;
+    color: #dcd9e4;
+}
+
+tr:nth-child(2) {
+    padding: 10px;
+}
+
+td:first-child {
+
+}
+
+td {
+    border: 0px;
+}
+
 .context-menu {
     -webkit-user-modify: read-only;
     display: flex;
@@ -74,8 +100,16 @@
     z-index: 99;   
     /*-webkit-transition: visibility 0s, opacity 0.5s linear; 
     transition: visibility 0s, opacity 0.5s linear;*/
-   }
-   
+}
+
+.export {
+    background: #007991;
+    background: -webkit-linear-gradient(to right, #78ffd6, #007991);
+    background: linear-gradient(to right, #78ffd6, #007991); 
+    padding: 10px;
+    border: 0;
+}
+
 /* Hover on Parent Container *//*
 .user-content:hover{
     cursor: pointer;

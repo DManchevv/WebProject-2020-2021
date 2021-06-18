@@ -23,20 +23,10 @@
 			});
 
 			function setOnline() {
-				document.getElementById("status").classList.remove("label-warning");
-				document.getElementById("status").classList.add("label-success");
-				document.getElementById("status").innerHTML = "Connected";
-				document.getElementsByClassName("connect")[0].style.display = "none";
-				document.getElementById("offlineActions").style.display = "none";
 				isConnected = true;
 			}
 
 			function setOffline() {
-				document.getElementById("status").classList.add("label-warning");
-				document.getElementById("status").classList.remove("label-success");
-				document.getElementById("status").innerHTML = "Disconnected";
-				document.getElementsByClassName("connect")[0].innerHTML = "Connect";
-				document.getElementById("offlineActions").style.display = "initial";
 				isConnected = false;
 			}
 
@@ -155,7 +145,7 @@
 
 		</div>
 		</div>
-        <button onclick="exportTableToCSV('table.csv')">Export HTML Table To CSV File</button>
+        <button onclick="exportTableToCSV('table.csv')" class="export">Export HTML Table To CSV File</button>
         <input type="file" id="fileUpload" />
         <input type="button" id="upload" value="Upload" onclick="importCSV()" />
         <div id="dvCSV"></div>
@@ -163,7 +153,7 @@
             <aside id="table-info">
                 <a href="register.html"><button id="register-btn">Register</button></a>
                 <a href="login.html"><button id="login-btn">Log In</button></a>
-                <button id="save">save</button>
+                <button id="save">Save</button>
                 <button id="new-document">New Document</button>
             </aside>
         </header>
