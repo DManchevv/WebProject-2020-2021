@@ -1,193 +1,191 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="../css/table-styles.css" />
-        <title>Document</title>
-        <script defer src="../js/sendRequestUtility.js"></script>
-        <script defer src="../js/createTable.js"></script>  <!--Moved this script here - Velin-->
-        <script defer src="../js/saveTable.js"></script>
-        <script defer src="../js/lock.js"></script>
-        <script src="../js/exportAsCSV.js"></script>
-        <!--<script defer src="../js/getSavedTable.js"></script>-->
-        <script defer src="../js/newDocument.js"></script>
-        <script defer src="../js/userSpecification.js"></script>
-        <script>
-            var conn = null;
-			var isConnected = false;
 
-			window.addEventListener("load", () => {
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" href="../css/table-styles.css" />
+	<title>Document</title>
+	<script defer src="../js/sendRequestUtility.js"></script>
+	<script defer src="../js/createTable.js"></script>
+	<!--Moved this script here - Velin-->
+	<script defer src="../js/saveTable.js"></script>
+	<script defer src="../js/lock.js"></script>
+	<script src="../js/exportAsCSV.js"></script>
+	<!--<script defer src="../js/getSavedTable.js"></script>-->
+	<script defer src="../js/newDocument.js"></script>
+	<script defer src="../js/userSpecification.js"></script>
+	<script>
+		var conn = null;
+		var isConnected = false;
+
+		window.addEventListener("load", () => {
+			setOffline();
+		});
+
+		function setOnline() {
+			isConnected = true;
+		}
+		function setOffline() {
+			isConnected = false;
+		}
+
+		function send() {
+			msg = document.getElementById("message").value;
+			if (msg == "") {
+				alert("Can't send an empty message");
+				return;
+			}
+			conn.send(msg);
+			document.getElementById("message").value = "";
+		}
+
+		function toggleConnect() {
+			var uri = document.getElementById("conn_str").value;
+
+			if (isConnected) {
 				setOffline();
-			});
+				return;
+			}
 
-			function setOnline() {
-				//document.getElementById("status").classList.remove("label-warning");
-				//document.getElementById("status").classList.add("label-success");
-				//document.getElementById("status").innerHTML = "Connected";
-				//document.getElementsByClassName("connect")[0].style.display = "none";
-				document.getElementById("offlineActions").style.display = "none";
+			conn = new WebSocket(uri);
+
+			conn.onmessage = function (e) {
+				let text = e.data.split('-');
+
+				if (text[0] === "changeCell") {
+					document.getElementById(text[1]).innerText = text[2];
+				}
+				else if (text[0] === "insertColumn") {
+					insertNewColumn(text[1]);
+					fixFollowingColumns(text[1]);
+				}
+				else if (text[0] === "insertRow") {
+					insertNewRow(text[1]);
+					fixFollowingRows(text[1]);
+				}
+				else if (text[0] === "jsonTable") {
+					tableCreate(text[2], text[3]);
+					setContextMenus();
+					let cells = JSON.parse(text[1]);
+
+					for (key in cells) {
+						document.getElementById(key).innerText = cells[key];
+					}
+
+					let cssCode = "";
+
+					for (let i = 4; i < text.length; i++) {
+						cssCode += text[i];
+
+						if (i != text.length - 1) {
+							cssCode += "-";
+						}
+					}
+
+					let cellsCss = JSON.parse(cssCode);
+
+					for (key in cellsCss) {
+						document.getElementById(key).style.cssText = cellsCss[key];
+					}
+					isUserLoggedIn(); // Added 18.06.2021 If the user is logged in from $_SESSION
+					// then we will load the loggedUserFunctions
+
+				}
+				else if (text[0] === "loadIcons") {
+					let clients = JSON.parse(text[1]);
+					console.log(clients);
+
+					for (key in clients) {
+						loadGuestUser("user" + clients[key]);
+					}
+				}
+				else if (text[0] === "loadNewUserIcon") {
+					loadGuestUser(text[1]);
+				}
+				else if (text[0] === "changeCSS") {
+					let cssCode = "";
+
+					for (let i = 2; i < text.length; i++) {
+						cssCode += text[i];
+
+						if (i != text.length - 1) {
+							cssCode += "-";
+						}
+					}
+
+					document.getElementById(text[1]).style.cssText = cssCode;
+				}
+				else if (text[0] === "removeIcon") {
+					console.log(text[1]);
+					document.getElementById(text[1]).remove();
+				}
+				else if (text[0] === "addStyle") {
+					let cssCode = text[2].replace(/~/g, "-");
+
+					document.getElementById(text[1]).style.cssText += cssCode;
+				}
+				else if (text[0].includes("loggedUserChangeCell")) {	// Added 18.06.2021
+					var currentCell = document.querySelector(`#${text[1]}`);
+					let userOwner = text[0].split('_')[1];
+					console.log(userOwner);
+					if (text[2].length > 0) {
+						currentCell.removeAttribute("contenteditable");
+						currentCell.setAttribute("owner", userOwner);
+					} else if (text[2].length === 0) {
+						currentCell.setAttribute("contenteditable", "");
+						currentCell.removeAttribute("owner");
+					}
+				}
+			}
+
+			conn.onopen = function (e) {
+				setOnline();
+				console.log("Connected");
 				isConnected = true;
-			}
+			};
 
-			function setOffline() {
-				//document.getElementById("status").classList.add("label-warning");
-				//document.getElementById("status").classList.remove("label-success");
-				//document.getElementById("status").innerHTML = "Disconnected";
-				//document.getElementsByClassName("connect")[0].innerHTML = "Connect";
-				document.getElementById("offlineActions").style.display = "initial";
-				isConnected = false;
-			}
+			conn.onclose = function (e) {
+				console.log("Disconnected");
+				setOffline();
+			};
 
-			function send() {
-				msg = document.getElementById("message").value;
-				if (msg == "") {
-					alert("Can't send an empty message");
-					return;
-				}
-				conn.send(msg);
-				document.getElementById("message").value = "";
-			}
+			conn.onerror = function (e) {
+				console.log("error");
+			};
+		}
 
-			function toggleConnect() {
-				var uri = document.getElementById("conn_str").value;
+		window.onload = toggleConnect;
+	</script>
+</head>
 
-				if (isConnected) {
-					setOffline();
-					return;
-				}
+<body>
+	<h3>This is a websocket demo using basic websockets</h3>
 
-				conn = new WebSocket(uri);
-                
-				conn.onmessage = function(e) {
-					let text = e.data.split('-');
+	<div id="offlineActions">
+		<div>Server IP: <input type="text" id="conn_str" value='ws://109.121.242.75:8090' /></div>
+	</div>
+	</div>
+	<button onclick="exportTableToCSV('table.csv')">Export HTML Table To CSV File</button>
+	<input type="file" id="fileUpload" />
+	<input type="button" id="upload" value="Upload" onclick="importCSV()" />
+	<div id="dvCSV"></div>
+	<header>
+		<!--Added this header with elements inside - Velin-->
+		<aside id="table-info">
+			<a href="register.html"><button id="register-btn">Register</button></a>
+			<a href="login.html"><button id="login-btn">Log In</button></a>
+			<button id="save">save</button>
+			<button id="new-document">New Document</button>
+		</aside>
+	</header>
+	<div class="context-menu context-menu-hidden" id="context-menu">
+		<span id="lock-cell">Lock</span>
+		<span id="custom-css">Custom CSS</span>
+	</div>
+	<script src="../js/customCss.js"></script>
+	<script src="../js/fixRowsAndColumns.js"></script>
+</body>
 
-					if (text[0] === "changeCell") {
-						document.getElementById(text[1]).innerText = text[2];
-					}
-					else if (text[0] === "insertColumn") {
-						insertNewColumn(text[1]);
-						fixFollowingColumns(text[1]);
-					}
-					else if (text[0] === "insertRow") {
-						insertNewRow(text[1]);
-            			fixFollowingRows(text[1]);
-					}
-					else if (text[0] === "jsonTable"){
-						tableCreate(text[2], text[3]);
-						setContextMenus();
-						let cells = JSON.parse(text[1]);
-
-						for (key in cells) {
-							document.getElementById(key).innerText = cells[key];
-						}
-
-						let cssCode = "";
-
-						for (let i = 4; i < text.length; i++) {
-							cssCode += text[i];
-							
-							if (i != text.length - 1) {
-								cssCode += "-";
-							}
-						}
-
-						let cellsCss = JSON.parse(cssCode);
-												
-						for (key in cellsCss) {
-							document.getElementById(key).style.cssText = cellsCss[key];
-						}
-                        isUserLoggedIn(); // Added 18.06.2021 If the user is logged in from $_SESSION
-										  // then we will load the loggedUserFunctions
-                            
-					}
-					else if (text[0] === "loadIcons") {
-						let clients = JSON.parse(text[1]);
-						console.log(clients);
-
-						for (key in clients) {
-							loadGuestUser("user"+clients[key]);
-						}
-					}
-					else if (text[0] === "loadNewUserIcon") {
-						loadGuestUser(text[1]);
-					}
-					else if (text[0] === "changeCSS") {
-						let cssCode = "";
-
-						for (let i = 2; i < text.length; i++) {
-							cssCode += text[i];
-							
-							if (i != text.length - 1) {
-								cssCode += "-";
-							}
-						}
-
-						document.getElementById(text[1]).style.cssText = cssCode;
-					}
-					else if (text[0] === "removeIcon") {
-						console.log(text[1]);
-						document.getElementById(text[1]).remove();
-					}
-                    if (text[0].includes("loggedUserChangeCell")) {	// Added 18.06.2021
-						var currentCell = document.querySelector(`#${text[1]}`);
-						let userOwner = text[0].split('_')[1];
-						console.log(userOwner);
-						if (text[2].length > 0) {
-                        	currentCell.removeAttribute("contenteditable");
-							currentCell.setAttribute("owner", userOwner);
-						} else if (text[2].length === 0) {
-							currentCell.setAttribute("contenteditable", "");
-							currentCell.removeAttribute("owner");
-						}
-                    }
-				}
-
-				conn.onopen = function(e) {
-					setOnline();
-					console.log("Connected");
-					isConnected = true;
-				};		
-
-				conn.onclose = function(e) {
-					console.log("Disconnected");
-					setOffline();
-				};
-
-                conn.onerror = function(e) {
-                    console.log("error");
-                };
-			}
-
-			window.onload = toggleConnect;
-        </script>
-    </head>
-    <body>
-        <h3>This is a websocket demo using basic websockets</h3>
-
-		<div id="offlineActions">
-			<div>Server IP: <input type="text" id="conn_str" value='ws://192.168.0.106:8090'/></div>
-
-		</div>
-		</div>
-        <button onclick="exportTableToCSV('table.csv')">Export HTML Table To CSV File</button>
-        <input type="file" id="fileUpload" />
-        <input type="button" id="upload" value="Upload" onclick="importCSV()" />
-        <div id="dvCSV"></div>
-        <header> <!--Added this header with elements inside - Velin-->
-            <aside id="table-info">
-                <a href="register.html"><button id="register-btn">Register</button></a>
-                <a href="login.html"><button id="login-btn">Log In</button></a>
-                <button id="save">save</button>
-                <button id="new-document">New Document</button>
-            </aside>
-        </header>
-        <div class="context-menu context-menu-hidden" id="context-menu">
-            <span id="lock-cell">Lock</span>
-            <span id="custom-css">Custom CSS</span>
-        </div> 
-        <script src="../js/customCss.js"></script>
-        <script src="../js/fixRowsAndColumns.js"></script>
-    </body>
 </html>
