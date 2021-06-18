@@ -144,6 +144,7 @@
                 };
 			}
 
+			window.onload = toggleConnect;
         </script>
     </head>
     <body>
@@ -152,10 +153,6 @@
 		<div id="offlineActions">
 			<div>Server IP: <input type="text" id="conn_str" value='ws://109.121.242.75:8090'/></div>
 
-		</div>
-		<div id="statusBox">
-			<span id="status" class="label label-warning">Disconnected</span>
-			<button onclick='toggleConnect()' class="connect">Connect</button>
 		</div>
 		</div>
         <button onclick="exportTableToCSV('table.csv')">Export HTML Table To CSV File</button>
