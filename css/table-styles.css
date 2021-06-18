@@ -4,13 +4,13 @@
 
 .table-cell {
     position: relative;
-    min-height: 30px;
+    min-height: 40px;
     min-width: 130px;
     outline-color: rgb(126, 126, 126);
 }
 
 .row-index {
-    height: 30px;
+    height: 40px;
     width: 20px;
     text-align: center;
 }
@@ -31,14 +31,17 @@ tr:nth-child(2n+3) {
 tr:first-child {
     background: #362f4b;
     color: #dcd9e4;
+    font-size: 20px;
 }
 
-tr:nth-child(2) {
-    padding: 10px;
+.main-table tbody tr:first-child td:first-child {
+    padding: 20px;
 }
 
-td:first-child {
-
+.main-table tbody tr:not(:first-child) td:first-child {
+    background-color: #362f4b;
+    color: #dcd9e4;
+    font-size: 20px;
 }
 
 td {

@@ -57,6 +57,7 @@
 
             if ($strings[0] === "changeCSS") {
                 $cssCode = "";
+
                 for ($i = 2; $i < count($strings) ; $i++) {
                     $cssCode = $cssCode . $strings[$i];
 
@@ -68,6 +69,11 @@
                 $this->cellsCSS[$strings[1]] = $cssCode;
             }
 
+            if ($strings[0] === "addStyle") {
+                $cssCode = str_replace("~","-",$strings[2]);
+                $this->cellsCSS[$strings[1]] = $cssCode;
+            }
+            
             if ($strings[0] === "editServerCellsArray") {
                 $this->cells[$strings[1]] = $strings[2];
             }

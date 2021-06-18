@@ -82,6 +82,11 @@ function tableCreate(rows, columns) {
                     if (conn != null) {
                         conn.send("changeCell-" + td.id + "-" + td.innerText);
                     }
+
+                    if (!isNaN(parseInt(td.innerText))) {
+                        td.style.textAlign = "right";
+                        conn.send("addStyle-" + td.id + "-text~align: right");
+                    }
                 });
             }
             else {
