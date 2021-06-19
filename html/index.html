@@ -13,7 +13,7 @@
 	<script defer src="../js/saveTable.js"></script>
 	<script defer src="../js/lock.js"></script>
 	<script src="../js/exportAsCSV.js"></script>
-	<!--<script defer src="../js/getSavedTable.js"></script>-->
+	<script defer src="../js/getSavedTable.js"></script>
 	<script defer src="../js/newDocument.js"></script>
 	<script defer src="../js/userSpecification.js"></script>
 	<script>
@@ -53,6 +53,7 @@
 
 			conn.onmessage = function (e) {
 				let text = e.data.split('-');
+				let specificClassesText = e.data.split("|");	// Because some classes contain a dash symbol
 
 				if (text[0] === "changeCell") {
 					document.getElementById(text[1]).innerText = text[2];
@@ -144,6 +145,35 @@
 				else if (text[0] === "loadNewTable") {
 					cleanTable();
 				}
+				else if (text[0] === "loadSavedTable") {
+					loadSave();
+				} 
+				else if (text[0] === "changeClass") {
+					var id = text[1];
+					var currentCellClass = "";
+					for (let i = 2; i < text.length; i++) {
+						currentCellClass += text[i];
+
+						if (i != text.length - 1) {
+							currentCellClass += "-";
+						}
+					}
+					var cell = document.querySelector(`#${id}`);
+					cell.classList = currentCellClass;
+					if (currentCellClass.includes("locked-cell")) {
+						cell.removeAttribute("contenteditable");
+					}
+				}
+				else if (specificClassesText[0] === "loadCellClasses") {
+					let cellsClasses = JSON.parse(specificClassesText[1]);
+					for (key in cellsClasses) {
+						var cell = document.querySelector(`#${key}`);
+						cell.classList = cellsClasses[key];
+						if (cellsClasses[key].includes("locked-cell")) {
+							cell.removeAttribute("contenteditable");
+						}
+					}
+				}
 				if (text[0].includes("loggedUserChangeCell")) {	// Added 18.06.2021
 					var currentCell = document.querySelector(`#${text[1]}`);
 					let userOwner = text[0].split('_')[1];
@@ -181,7 +211,7 @@
 
 <body>
 	<section class="page-header">
-		<div class="ip">Server IP: <input type="text" id="conn_str" value='ws://109.121.242.75:8090' readonly /></div>
+		<div class="ip">Server IP: <input type="text" id="conn_str" value='ws://192.168.0.106:8090' readonly /></div>
 
 		<button onclick="exportTableToCSV('table.csv')" class="table-button export">Export HTML Table To CSV File</button>
 		<input type="file" id="fileUpload" class="input-file"/>

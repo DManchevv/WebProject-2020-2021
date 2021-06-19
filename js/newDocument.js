@@ -5,9 +5,6 @@
 })();
 
 function loadNewDocument() {
-    console.log(1);
-    var cleanTableUrl = "../php/cleanTabledb.php";
-    sendRequest(cleanTableUrl, { method: 'POST' }, load, console.log);
     cleanTable();
     //location.reload();
     if (conn != null) {
@@ -16,8 +13,15 @@ function loadNewDocument() {
 }
 
 function cleanTable() {
+    var cleanTableUrl = "../php/cleanTabledb.php";
+    sendRequest(cleanTableUrl, { method: 'POST' }, load, console.log);
     var cells = document.querySelectorAll(".table-cell");
 	cells.forEach(cell => {
         cell.innerText = "";
+        cell.removeAttribute("style");
+        if (cell.classList.contains("locked-cell")) {
+            cell.classList.remove("locked-cell");
+            cell.setAttribute("contenteditable", "");
+        }
 	});
 }

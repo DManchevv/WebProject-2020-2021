@@ -23,15 +23,20 @@ function saveTable() {
         } else {
             innerValue = element.innerHTML;
         }
+        var cellOwner = " ";
+        if (element.hasAttribute("owner")) {
+            cellOwner = element.getAttribute("owner");
+        }
         const tableCell = {
             id: element.id,
             class: element.classList.value,
-            innervalue: innerValue
+            innervalue: innerValue,
+            owner: cellOwner,
+            style: element.style.cssText
         }
         tableCells.push(tableCell);
         //sendRequest(url, { method: 'POST', data: `data=${JSON.stringify(tableCell)}` }, load, console.log);
     });
-
     sendRequest(url, { method: 'POST', data: `data=${JSON.stringify(tableCells)}` }, load, console.log);
 }
 

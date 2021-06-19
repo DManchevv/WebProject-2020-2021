@@ -29,10 +29,10 @@
 
         private function prepareStatements() {
             /*$sql = "INSERT INTO documenttable (id, class, data, owner) VALUES (:id, :class, :data, NULL)";*/
-            $sql = "INSERT INTO documenttable (id, class, innervalue) VALUES (:id, :class, :innervalue)";
+            $sql = "INSERT INTO documenttable (id, class, innervalue, owner, style) VALUES (:id, :class, :innervalue, :owner, :style)";
             $this->insertTable = $this->connection->prepare($sql);
 
-            $sql = "TRUNCATE webtech_project.documenttable";
+            $sql = "TRUNCATE webproject.documenttable";
             $this->truncateTable = $this->connection->prepare($sql);
 
             $sql = "SELECT * FROM documenttable";

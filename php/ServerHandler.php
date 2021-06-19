@@ -11,9 +11,12 @@
         protected $cellOwner = array();
         protected $rowsNumber = 30;
         protected $columnsNumber = 30;
+        protected $serverStartedForTheFirstTime;   //Added
+        protected $cellsClasses = array();
 
         public function __construct() {
             $this->clients = new \SplObjectStorage;
+            $this->serverStartedForTheFirstTime = true;
             echo "Server started\n";
         }
 
@@ -28,12 +31,19 @@
             $conn->send("jsonTable-" . json_encode($this->cells) . "-" . $this->rowsNumber . '-' . $this->columnsNumber . "-" . json_encode($this->cellsCSS));
             $conn->send("loadIcons-" . json_encode($this->clientsIds));
             $conn->send("loadCellOwners-" . json_encode($this->cellOwner));
+            $conn->send("loadCellClasses|" . json_encode($this->cellsClasses));
+            
 
             foreach ($this->clients as $client) {
                 if ($conn !== $client) {
                     // The sender is not the receiver, send to each client connected
                     $client->send("loadNewUserIcon-" . "user" . $randomId);
                 }
+            }
+            
+            if ($this->serverStartedForTheFirstTime) {
+                $conn->send("loadSavedTable");//
+                $this->serverStartedForTheFirstTime = false;
             }
 
             echo "New connection! ({$conn->resourceId})\n";
@@ -83,6 +93,14 @@
             }
             if ($strings[0] === "loadNewTable") {
                 $this->cells = array();
+                $this->cellsCSS = array();
+            }
+            if ($strings[0] === "changeClass") {
+                $cellData = explode("-", $msg, 3); // Here we get the string separated as shown
+                                                        //  [0] => loadClasses
+                                                        //  [1] => Z8
+                                                        //  [2] => table-cell Z 8       And we need the second element
+                $this->cellsClasses[$cellData[1]] = $cellData[2];
             }
 
             if ($strings[0] === "editServerCellsArray") {

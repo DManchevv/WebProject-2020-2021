@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 09, 2021 at 08:15 PM
+-- Generation Time: Jun 20, 2021 at 12:12 AM
 -- Server version: 10.4.18-MariaDB
 -- PHP Version: 8.0.3
 
@@ -18,8 +18,22 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `webtech_project`
+-- Database: `webproject`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `documenttable`
+--
+
+CREATE TABLE `documenttable` (
+  `id` varchar(20) NOT NULL,
+  `class` varchar(50) NOT NULL,
+  `innervalue` varchar(255) NOT NULL,
+  `owner` varchar(30) NOT NULL,
+  `style` mediumtext DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -28,11 +42,11 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `users` (
-  `id` int(10) UNSIGNED NOT NULL,
+  `id` int(11) NOT NULL,
   `username` varchar(30) NOT NULL,
   `password` varchar(255) NOT NULL,
   `email` varchar(30) NOT NULL,
-  `type` enum('Registered User','Administrator','','') NOT NULL
+  `type` enum('RegisteredUser','Administrator') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -40,11 +54,18 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `email`, `type`) VALUES
-(1, 'user1', '$2y$10$sdubqVYIEIdjpW5LMiGWEeYMTF6gePHTDJ2pdvpVaEYwAcUpYVGhO', 'asdf@a.a', 'Registered User');
+(1, 'user1', '$2y$10$Z3E2Plnr0oipbaGn/NzyqOlSW7VlHpKFYxPTm/zOMNuZm1eUx.b3G', 'asdf@a.a', 'RegisteredUser'),
+(2, 'user', '$2y$10$KmT1GI2WVuUDRTkxKqxNP.fgMXjnwSu1sifZpM.LYo9IuK7XGI7K2', 'asdf@a.a', 'RegisteredUser');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `documenttable`
+--
+ALTER TABLE `documenttable`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `users`
@@ -60,7 +81,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
