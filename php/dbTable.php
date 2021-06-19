@@ -48,7 +48,11 @@
                 $this->insertTable->execute($data);
                 return ["success" => true];
             } catch(PDOException $e) {
-                $this->connection->rollBack();
+                try {
+                    $this->connection->rollBack();
+                } catch (Exception $x) {
+                    
+                }
 
                 return ["success" => false, "error" => "Connection failed: ". $e->getMessage()];
             }

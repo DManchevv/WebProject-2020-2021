@@ -8,6 +8,7 @@
         protected $cells = array();
         protected $cellsCSS = array();
         protected $clientsIds = array();
+        protected $cellOwner = array();
         protected $rowsNumber = 30;
         protected $columnsNumber = 30;
 
@@ -26,7 +27,7 @@
 
             $conn->send("jsonTable-" . json_encode($this->cells) . "-" . $this->rowsNumber . '-' . $this->columnsNumber . "-" . json_encode($this->cellsCSS));
             $conn->send("loadIcons-" . json_encode($this->clientsIds));
-
+            $conn->send("loadCellOwners-" . json_encode($this->cellOwner));
 
             foreach ($this->clients as $client) {
                 if ($conn !== $client) {
@@ -45,6 +46,7 @@
 
             if ($strings[0] === "changeCell") {
                 $this->cells[$strings[1]] = $strings[2];
+                //print_r($strings);
             }
 
             if ($strings[0] === "insertRow") {
@@ -72,6 +74,15 @@
             if ($strings[0] === "addStyle") {
                 $cssCode = str_replace("~", "-", $strings[2]);
                 $this->cellsCSS[$strings[1]] = $cssCode;
+            }
+            // Added
+            if (str_contains($strings[0], "loggedUserChangeCell")) {
+                $userOwner = explode("_", $strings[0])[1];
+                $this->cellOwner[$strings[1]] = $userOwner;
+                //print_r($this->cellOwner);
+            }
+            if ($strings[0] === "loadNewTable") {
+                $this->cells = array();
             }
 
             if ($strings[0] === "editServerCellsArray") {

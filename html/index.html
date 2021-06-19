@@ -131,10 +131,23 @@
 
 					document.getElementById(text[1]).style.cssText += cssCode;
 				}
-				else if (text[0].includes("loggedUserChangeCell")) {	// Added 18.06.2021
+				// ---------------
+				else if (text[0] === "loadCellOwners") {	// Added 19.06.2021
+						//console.log(1);
+						let cellsOwner = JSON.parse(text[1]);
+						for (key in cellsOwner) {
+							var cell = document.querySelector(`#${key}`);
+							cell.setAttribute("owner", cellsOwner[key]);
+							cell.removeAttribute("contenteditable");
+						}
+				}
+				else if (text[0] === "loadNewTable") {
+					cleanTable();
+				}
+				if (text[0].includes("loggedUserChangeCell")) {	// Added 18.06.2021
 					var currentCell = document.querySelector(`#${text[1]}`);
 					let userOwner = text[0].split('_')[1];
-					console.log(userOwner);
+					//console.log(userOwner);
 					if (text[2].length > 0) {
 						currentCell.removeAttribute("contenteditable");
 						currentCell.setAttribute("owner", userOwner);
@@ -143,6 +156,7 @@
 						currentCell.removeAttribute("owner");
 					}
 				}
+					// ----------------
 			}
 
 			conn.onopen = function (e) {

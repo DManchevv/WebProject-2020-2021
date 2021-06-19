@@ -90,8 +90,10 @@ function loadLoggedUser() {
     tableInfo.appendChild(logout);
 
     var tableCells = document.querySelectorAll(".table-cell");
-    //console.log(tableCells);
     tableCells.forEach(td => {
+        if (td.getAttribute("owner") === username) {
+            td.setAttribute("contenteditable", "");
+        }
         td.addEventListener('input', () => {
             if (conn != null) {
                 conn.send(`loggedUserChangeCell_${username}-` + td.id + "-" + td.innerText);
