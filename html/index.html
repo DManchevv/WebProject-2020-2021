@@ -2,11 +2,11 @@
 <html lang="en">
 
 <head>
+	<title>Online Table</title>
 	<meta charset="UTF-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<link rel="stylesheet" href="../css/table-styles.css" />
-	<title>Document</title>
 	<script defer src="../js/sendRequestUtility.js"></script>
 	<script defer src="../js/createTable.js"></script>
 	<!--Moved this script here - Velin-->
@@ -125,7 +125,6 @@
 						currentIcons[i].style.position = "relative";
 						currentIcons[i].style.left = `${(-25)*i}px`;
 					}
-
 				}
 				else if (text[0] === "addStyle") {
 					let cssCode = text[2].replace(/~/g, "-");
@@ -167,23 +166,21 @@
 </head>
 
 <body>
-	<h3>This is a websocket demo using basic websockets</h3>
+	<section class="page-header">
+		<div class="ip">Server IP: <input type="text" id="conn_str" value='ws://109.121.242.75:8090' readonly /></div>
 
-	<div id="offlineActions">
-		<div>Server IP: <input type="text" id="conn_str" value='ws://109.121.242.75:8090' /></div>
-	</div>
-
-	<button onclick="exportTableToCSV('table.csv')">Export HTML Table To CSV File</button>
-	<input type="file" id="fileUpload" />
-	<input type="button" id="upload" value="Upload" onclick="importCSV()" />
-	<div id="dvCSV"></div>
+		<button onclick="exportTableToCSV('table.csv')" class="table-button export">Export HTML Table To CSV File</button>
+		<input type="file" id="fileUpload" class="input-file"/>
+		<input type="button" id="upload" class="table-button" value="Upload" onclick="importCSV()" />
+		<div id="dvCSV"></div>
+	</section>
 	<header>
 		<!--Added this header with elements inside - Velin-->
-		<aside id="table-info">
-			<a href="register.html"><button id="register-btn">Register</button></a>
-			<a href="login.html"><button id="login-btn">Log In</button></a>
-			<button id="save">save</button>
-			<button id="new-document">New Document</button>
+		<aside id="table-info" class="table-info">
+			<button id="register-btn" class="table-button"><a href="register.html">Register</a></button>
+			<button id="login-btn" class="table-button"><a href="login.html">Log In</a></button>
+			<button id="save" class="table-button">Save</button>
+			<button id="new-document" class="table-button">New Document</button>
 		</aside>
 	</header>
 	<div class="context-menu context-menu-hidden" id="context-menu">

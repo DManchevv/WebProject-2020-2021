@@ -83,10 +83,15 @@ function tableCreate(rows, columns) {
                         conn.send("changeCell-" + td.id + "-" + td.innerText);
                     }
 
-                    if (!isNaN(parseInt(td.innerText))) {
+                    if (!isNaN(td.innerText)) {
                         td.style.textAlign = "right";
                         conn.send("addStyle-" + td.id + "-text~align: right");
                     }
+                    else {
+                        td.style.textAlign = "left";
+                        conn.send("addStyle-" + td.id + "-text~align: left");
+                    }
+                    
                 });
             }
             else {

@@ -70,7 +70,7 @@
             }
 
             if ($strings[0] === "addStyle") {
-                $cssCode = str_replace("~","-",$strings[2]);
+                $cssCode = str_replace("~", "-", $strings[2]);
                 $this->cellsCSS[$strings[1]] = $cssCode;
             }
 
