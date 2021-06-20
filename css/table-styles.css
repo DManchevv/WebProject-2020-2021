@@ -2,58 +2,53 @@
     box-sizing: border-box;
 }
 
+html::-webkit-scrollbar, #tableWrapper::-webkit-scrollbar {
+    width: 10px;
+}
+
+html::-webkit-scrollbar-thumb, #tableWrapper::-webkit-scrollbar-thumb {
+    background-color: #362f4b;
+    border-radius: 10px;
+}
 
 body {
     height: 100%;
+    margin: 0;
 }
 
-.ip {
-   text-align: center; 
-   font-size: 18px;
-}
-
-.ip input {
-    outline: none;
-    border: 0;
-    font-size: 18px;
-}
-
-.export {
-    display: block;
-    margin: 2em 0;
-    background: #007991;
-    background: -webkit-linear-gradient(to right, #78ffd6, #007991);
-    background: linear-gradient(to right, #78ffd6, #007991); 
-    padding: 10px;
-    border: 0;
-}
-
-.table-info {
-    margin: 2em 0;
-}
-
-.input-file {
-    width: 300px;
-}
-
-.input-file::-webkit-file-upload-button {
+.nav-list {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 3em;
     background: #007991;
     background: -webkit-linear-gradient(to right, #78ffd6, #007991);
     background: linear-gradient(to right, #362f4b, #877aaf);
-    color: white;
-    padding: 15px;
-    margin-left: 2em;
-    cursor: pointer;
-    outline: none;
+    overflow: hidden;
+}
+
+.nav-list li button {
+    height: 100%;
+    background-color: inherit;
+    border: 0;
+}
+
+.nav-list li button a {
+    text-decoration: none;
+}
+
+.nav-list button:hover, .upload-file-wrapper .input-file:hover, .upload-file-wrapper:hover {
+    background-color: #2b1433;
 }
 
 .table-button {
-    margin-left: 2em;
-    margin-right: 2em;
-    padding: 15px;
-    background: #007991;
-    background: -webkit-linear-gradient(to right, #78ffd6, #007991);
-    background: linear-gradient(to right, #362f4b, #877aaf);
+    border: 0;
+    padding: 20px;
+    outline: none;
+    background-color: inherit;
     color: white;
     cursor: pointer;
 }
@@ -63,12 +58,66 @@ body {
     color: white;
 }
 
+.new-document {
+    margin-left: auto;
+}
+
+input[type="file"] {
+    color: transparent;
+}
+
+.input-file {
+    max-width: 128px;
+    width: 100%;
+    height: 100%;
+    padding: 24px 4px;
+    cursor: pointer;
+}
+
+.input-file::before {
+    content: 'Import File';
+    color: white;
+    display: inline-block;
+    background-color: inherit;
+    padding: 3px 29px;
+    outline: none;
+    cursor: pointer;
+}
+
+.input-file::-webkit-file-upload-button {
+    visibility: hidden;
+}
+
+.table-info {
+    max-height: 50px;
+    overflow: hidden;
+}
+
+.icons {
+    margin-left: auto;
+    padding: 10px;
+}
+
+.ip { 
+   display: none;
+}
+
 .table-cell {
     position: relative;
     min-height: 40px;
     min-width: 130px;
-    outline-color: rgb(126, 126, 126);
+    outline: none;
     padding: 10px 20px;
+}
+
+.table-cell:focus {
+    border: 1px solid #786c9d;
+    outline: none;
+}
+
+.foreign-selected-cell {
+    border: 1px solid green;
+    outline: none;
 }
 
 .row-index {
@@ -83,7 +132,7 @@ body {
 
 #tableWrapper {
     overflow-x: auto;
-    margin-top: 2rem;
+    margin-top: 0.5rem;
 }
 
 .main-table {
@@ -128,13 +177,21 @@ td {
     display: flex;
     position: absolute;
     flex-direction: column;
-    background-color: black;
-    width: 100px;
-    height: 150px;
     text-align: center;
     border: 1px solid black;
     color: white;
-    z-index: 2;
+    z-index: 20;
+}
+
+.context-menu span {
+    padding: 10px;
+    background-color: #796d9d;
+    border: 1px ridge black;
+    cursor: pointer;
+}
+
+.context-menu span:hover {
+    background-color: #443c5c;
 }
 
 .context-menu-hidden {
@@ -142,14 +199,7 @@ td {
 }
 
 .locked-cell {
-    background-color: red;
-}
-
-/* Added By Velin ----------*/
-#table-info {
-    height: 3.5rem;
-    display: flex;
-    position: relative;
+    background-color: #8a1717;
 }
 
 .user-img {
@@ -182,11 +232,83 @@ td {
     transition: visibility 0s, opacity 0.5s linear;*/
 }
 
-html::-webkit-scrollbar, #tableWrapper::-webkit-scrollbar {
-    width: 10px;
+.css-editor {
+    line-height: 2em;
+    background-color: #f2edff;
 }
 
-html::-webkit-scrollbar-thumb, #tableWrapper::-webkit-scrollbar-thumb {
-    background-color: #362f4b;
-    border-radius: 10px;
+@media only screen and (max-width: 1024px) and (min-width: 900px) {
+    .nav-list {
+        flex-direction: column-reverse;
+    }
+
+    .nav-buttons-wrapper {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .new-document {
+        margin: 0;
+    }
+
+    .input-file::before {
+        padding-left: 30px;
+    }
+
+}
+
+@media only screen and (max-width: 900px) {
+    .nav-list {
+        position: relative;
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .new-document {
+        margin: 0;
+    }
+
+    .register-btn, .login-btn {
+        padding: 0;
+        width: 100%;
+        text-align: left;
+    }
+
+    .logout-btn {
+        width: 100%;
+        text-align: left;
+    }
+
+    a.table-button {
+        display: block;
+        width: 100%;
+    }
+
+    .upload-file-wrapper {
+        padding: 20px;
+    }
+
+    .upload-file-wrapper .input-file  {
+        padding: 0;
+    }
+    
+    .input-file::before, .icons {
+        padding: 0;
+    }
+
+    .icons {
+        padding-bottom: 10px;
+    }
+}
+
+@media only screen and (max-width: 550px) {
+    .icons {
+        margin: 0;
+    }
+
+    .table-info {
+        display: flex;
+        justify-content: flex-end;
+    }
 }

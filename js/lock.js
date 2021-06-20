@@ -6,14 +6,13 @@ function setContextMenus() {
         element.addEventListener("contextmenu", e => {
             e.preventDefault();
             openColumnContextMenu(element);
-        })
+        });
     });
 
     rows.forEach(element => {
-        element.addEventListener("contextmenu", e => {
-            e.preventDefault();
+        element.addEventListener("contextmenu", () => {
             openRowContextMenu(element);
-        })
+        });
     });
 };
 
@@ -22,12 +21,23 @@ function openColumnContextMenu(element) {
         currentTd = element;
         contextMenu.classList.toggle("context-menu-hidden");
         fixUpColumns(element);
-        
+        let position = currentTd.getBoundingClientRect();
+        let x = position.right;
+        let y = position.top + window.scrollY;
+        contextMenu.style.position = "absolute";
+        contextMenu.style.top = y + 'px';
+        contextMenu.style.left = x + 'px';
     }
     else {
         if (currentTd != element) {
             currentTd = element;
             fixUpColumns(element);
+            let position = currentTd.getBoundingClientRect();
+            let x = position.right;
+            let y = position.top + window.scrollY;
+            contextMenu.style.position = "absolute";
+            contextMenu.style.top = y + 'px';
+            contextMenu.style.left = x + 'px';
         }
     }
 
@@ -35,9 +45,6 @@ function openColumnContextMenu(element) {
 }
 
 function fixUpColumns(element) {
-    contextMenu.style.position = "absolute";    //sets the position of the column context menu
-    contextMenu.style.top = "auto";
-    contextMenu.style.left = "inherit";
     removeInsertRowOptions(contextMenu);
 
     if (contextMenu.querySelector('#insert-column') == null) {
@@ -54,7 +61,6 @@ function fixUpColumns(element) {
         contextMenu.appendChild(insertColumn);
     }
 
-    element.appendChild(contextMenu);
     var column = document.querySelectorAll(`.${element.innerText[0]}`);
 
     column.forEach(el => {
@@ -84,10 +90,13 @@ function openRowContextMenu(element) {
 }
 
 function fixUpRows(element) {
-    contextMenu.style.position = "absolute";    //sets the position of the row context menu
-    contextMenu.style.top = "auto";             //
-    contextMenu.style.left = "inherit";         //
     removeInsertColumnOptions(contextMenu);
+    let position = element.getBoundingClientRect();
+    let x = position.right;
+    let y = position.top + window.scrollY;
+    contextMenu.style.position = "absolute";
+    contextMenu.style.top = y + 'px';
+    contextMenu.style.left = x + 'px';
 
     if (contextMenu.querySelector('#insert-row') == null) {
         let insertRow = document.createElement('span');
@@ -103,7 +112,6 @@ function fixUpRows(element) {
         contextMenu.appendChild(insertRow);
     }
 
-    element.appendChild(contextMenu);
     var nthElement = Number(element.firstChild.nodeValue) + 1;
     var row = document.querySelectorAll(`tr:nth-of-type(${nthElement})`)[0].childNodes;
     row.forEach(el => {

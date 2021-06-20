@@ -58,6 +58,7 @@ function loadGuestUser(id) {
     userImg.classList.add("user-img");
     userImg.setAttribute("src", `../images/${anonymous[randomImg]}.png`);
     userImg.setAttribute('id', id);
+    userImg.style.position = "relative";
     userImg.title = `anonymous ${anonymous[randomImg]}`;
     // imageFunctionality(userImg, text);
 
@@ -66,30 +67,42 @@ function loadGuestUser(id) {
     // tableInfo.appendChild(section);
     tableInfo.appendChild(userImg);
 
-    let iconsCount = document.querySelectorAll('.user-img').length;
+    let icons = document.querySelectorAll('.user-img');
+
+    iconsCount = icons.length;
 
     if (iconsCount > 1) {
-        userImg.style.position = "relative";
-        userImg.style.left = `${-25*(iconsCount - 1)}px`;
+        userImg.style.right = "0px";
+    }
+
+    for (let i = 0; i < iconsCount; i++) {
+        icons[iconsCount - i - 1].style.right = `${-25*i}px`;
     }
 }
 
 function loadLoggedUser() {
-    var registerBtn = document.querySelector("#register-btn");
-    var loginBtn = document.querySelector("#login-btn");
+    let registerBtn = document.querySelector("#register-btn");
+    let loginBtn = document.querySelector("#login-btn");
 
-    registerBtn.parentNode.removeChild(registerBtn);
-    loginBtn.parentNode.removeChild(loginBtn);
+    let navBar = document.querySelector('.nav-list');
 
-    var logout = document.createElement("button");
+    navBar.removeChild(registerBtn.parentElement);
+    navBar.removeChild(loginBtn.parentElement);
+
+    let newLi = document.createElement('li');
+    let icons = document.querySelector('.icons');
+
+    let logout = document.createElement("button");
     logout.id = "logout-btn";
+    logout.classList.add('table-button');
+    logout.classList.add('logout-btn');
     logout.addEventListener("click", logoutUser);
-    logout.innerHTML = "logout";
+    logout.innerText = "Logout";
 
-    var tableInfo = document.querySelector("#table-info");
-    tableInfo.appendChild(logout);
+    newLi.appendChild(logout);
+    navBar.insertBefore(newLi, icons);
 
-    var tableCells = document.querySelectorAll(".table-cell");
+    let tableCells = document.querySelectorAll(".table-cell");
     tableCells.forEach(td => {
         if (td.getAttribute("owner") === username) {
             td.setAttribute("contenteditable", "");

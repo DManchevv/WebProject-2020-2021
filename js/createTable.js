@@ -26,7 +26,6 @@ cellLock.addEventListener('click', () => {
 })
 
 function tableCreate(rows, columns) {
-    let body = document.getElementsByTagName('body')[0];
     tbl = document.createElement('table');
     tbl.classList = "main-table";
     tbl.setAttribute('id', 'main-table');
@@ -76,6 +75,19 @@ function tableCreate(rows, columns) {
                 
                 td.addEventListener('contextmenu', () => { // Edit Velin only add this specific context menu on table-cell 
                     openContextMenu(td);
+                });
+
+                td.addEventListener('click', () => {
+
+                    if (currentTd != td) {
+                        conn.send('selectedCell-' + td.id);
+
+                        if (currentTd != null) {
+                            conn.send('oldCell-' + currentTd.id);
+                        }
+
+                        currentTd = td;
+                    }
                 });
 
                 td.addEventListener('input', () => {
@@ -129,7 +141,7 @@ function openContextMenu(td) {
         contextMenu.classList.toggle("context-menu-hidden");
         let position = td.getBoundingClientRect();
         let x = position.right;
-        let y = position.top;
+        let y = position.top + window.scrollY;
         contextMenu.style.position = "absolute";
         contextMenu.style.top = y + 'px';
         contextMenu.style.left = x + 'px';
@@ -148,10 +160,12 @@ function openContextMenu(td) {
     else {
         // If we clicked different cell from the one that is active at the moment
         if (currentTd != td) {
+            contextMenu.classList.toggle("context-menu-hidden");
             currentTd = td;
             let position = td.getBoundingClientRect();
             let x = position.right;
-            let y = position.top;
+            let y = position.top + window.scrollY;
+            contextMenu.classList.toggle("context-menu-hidden");
             contextMenu.style.position = "absolute";
             contextMenu.style.top = y + 'px';
             contextMenu.style.left = x + 'px';
@@ -177,13 +191,16 @@ function importCSV() {
             var reader = new FileReader();
             reader.onload = function (e) {
                 var rows = e.target.result.split("\n");
-                for (var i = 0; i < rows.length; i++) {
+                for (var i = 1; i < rows.length; i++) {
                     var cells = rows[i].split(",");
                     if (cells.length > 1) {
                         var row = document.getElementById('main-table').rows[i];
-                        for (var j = 0; j < cells.length; j++) {
+                        for (var j = 1; j < cells.length; j++) {
                             var cell = row.cells[j];
-                            cell.innerHTML = cells[j];
+                            if (cell != null) {
+                                cell.innerText = cells[j];
+                                conn.send("changeCell-" + cell.id + "-" + cell.innerText);
+                            }
                         }
                     }
                 }

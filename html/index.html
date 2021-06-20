@@ -55,7 +55,14 @@
 				let text = e.data.split('-');
 				let specificClassesText = e.data.split("|");	// Because some classes contain a dash symbol
 
-				if (text[0] === "changeCell") {
+				if (text[0] === "selectedCell") {
+					document.getElementById(text[1]).classList.add('foreign-selected-cell');	
+					document.getElementById(text[1]).classList.add(text[2]+text[3]);
+				}
+				else if (text[0] === "oldCell") {
+					document.getElementById(text[1]).classList.remove('foreign-selected-cell');
+				}
+				else if (text[0] === "changeCell") {
 					document.getElementById(text[1]).innerText = text[2];
 				}
 				else if (text[0] === "insertColumn") {
@@ -123,8 +130,13 @@
 					let currentIcons = document.querySelectorAll('.user-img');
 
 					for (let i = 0; i < currentIcons.length; i++) {
-						currentIcons[i].style.position = "relative";
-						currentIcons[i].style.left = `${(-25)*i}px`;
+						currentIcons[currentIcons.length - 1 - i].style.position = "relative";
+						currentIcons[currentIcons.length - 1 - i].style.right = `${-25*i}px`;
+					}
+				}
+				else if (text[0] === "removeActiveCell") {
+					if (document.querySelector('.' + text[1]+text[2]) != null) {
+						document.querySelector('.' + text[1]+text[2]).classList.remove('foreign-selected-cell');
 					}
 				}
 				else if (text[0] === "addStyle") {
@@ -210,32 +222,31 @@
 </head>
 
 <body>
-	<section class="page-header">
-		<div class="ip">Server IP: <input type="text" id="conn_str" value='ws://192.168.0.106:8090' readonly /></div>
-
-		<button onclick="exportTableToCSV('table.csv')" class="table-button export">Export HTML Table To CSV File</button>
-		<input type="file" id="fileUpload" class="input-file"/>
-		<input type="button" id="upload" class="table-button" value="Upload" onclick="importCSV()" />
-		<div id="dvCSV"></div>
-	</section>
+	<nav class="page-header">
+		<ul class="nav-list">
+			<li class="new-document"><button id="new-document" class="table-button">New Document</button></li>
+			<li class="upload-file-wrapper">
+				<input type="file" id="fileUpload" class="input-file" onchange="importCSV()" />
+			</li>
+			<li><button id="save" class="table-button">Save</button></li>
+			<li><button onclick="exportTableToCSV('table.csv')" class="table-button export">Export as CSV</button></li>
+			<li><button id="register-btn" class="register-btn"><a href="register.html" class="table-button">Register</a></button></li>
+			<li><button id="login-btn" class="login-btn"><a href="login.html" class="table-button">Log In</a></button></li>
+			<li class="icons"><aside id="table-info" class="table-info"></aside></li>
+		</ul>
+	</nav>
 	<header>
 		<!--Added this header with elements inside - Velin-->
-		<aside id="table-info" class="table-info">
-			<button id="register-btn" class="table-button"><a href="register.html">Register</a></button>
-			<button id="login-btn" class="table-button"><a href="login.html">Log In</a></button>
-			<button id="save" class="table-button">Save</button>
-			<button id="new-document" class="table-button">New Document</button>
-		</aside>
+		<div class="ip">Server IP: <input type="text" id="conn_str" value='ws://109.121.242.75:8090' readonly /></div>
 	</header>
 	<div class="context-menu context-menu-hidden" id="context-menu">
 		<span id="lock-cell">Lock</span>
 		<span id="custom-css">Custom CSS</span>
 	</div>
-	<div id="tableWrapper">
-		
-	</div>
+	<div id="tableWrapper"></div>
 	<script src="../js/customCss.js"></script>
 	<script src="../js/fixRowsAndColumns.js"></script>
+	<script src="../js/fixNavBarOnLowRes.js"></script>
 </body>
 
 </html>

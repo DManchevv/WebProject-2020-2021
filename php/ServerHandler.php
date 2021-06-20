@@ -56,7 +56,6 @@
 
             if ($strings[0] === "changeCell") {
                 $this->cells[$strings[1]] = $strings[2];
-                //print_r($strings);
             }
 
             if ($strings[0] === "insertRow") {
@@ -91,6 +90,7 @@
                 $this->cellOwner[$strings[1]] = $userOwner;
                 //print_r($this->cellOwner);
             }
+
             if ($strings[0] === "loadNewTable") {
                 $this->cells = array();
                 $this->cellsCSS = array();
@@ -119,6 +119,16 @@
 
                 $this->cellsCSS[$strings[1]] = $cssCode;
             }
+            else if ($strings[0] === "selectedCell") {
+                $fullMessage = $msg . "-user-" . $this->clientsIds[$from->resourceId];
+
+                foreach ($this->clients as $client) {
+                    if ($from !== $client) {
+                        // The sender is not the receiver, send to each client connected
+                        $client->send($fullMessage);
+                    }
+                }
+            }
             else {
                 echo sprintf('Connection %d sending message "%s" to %d other connection%s' . "\n"
                 , $from->resourceId, $msg, $numRecv, $numRecv == 1 ? '' : 's');
@@ -140,6 +150,10 @@
                 $client->send("removeIcon-" . "user" . $this->clientsIds[$conn->resourceId]);
             }
 
+            foreach ($this->clients as $client) {
+                $client->send("removeActiveCell-user-" . $this->clientsIds[$conn->resourceId]);
+            }
+            
             unset($this->clientsIds[$conn->resourceId]);
 
             echo "Connection {$conn->resourceId} has disconnected\n";

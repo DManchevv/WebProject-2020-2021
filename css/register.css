@@ -1,0 +1,130 @@
+* {
+	box-sizing: border-box;
+}
+
+html, body {
+	height: 100%;
+}
+
+body {
+    background-image: url(https://coolbackgrounds.io/images/backgrounds/index/ranger-4df6c1b6.png);
+    background-size: cover;
+	padding: 0;
+	margin: 0;
+}
+
+.signup-form {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+	z-index: 0;
+	display: flex;
+    flex-direction: column;
+	min-width: 30%;
+	max-width: 35rem;
+	padding: 3rem;
+	background-color: #5051695c;
+	backdrop-filter: brightness(0.5);
+	gap: 20px;
+	border-radius: 10px;   
+	color: white;
+	box-shadow: 0 1px 1px rgba(0,0,0,0.12), 
+              0 2px 2px rgba(0,0,0,0.12), 
+              0 4px 4px rgba(0,0,0,0.12), 
+              0 8px 8px rgba(0,0,0,0.12),
+              0 16px 16px rgba(0,0,0,0.12);
+}
+
+.signup-form-header {
+	font-size: 30px; 
+	margin: 0; 
+	margin-bottom: 1em;
+}
+
+.signup-form-textarea {
+	background-color:transparent;
+}
+
+.signup-form input {
+	border: 0;
+	background-color: transparent;
+	border-bottom: 2px solid #65aba4;
+	height: 2rem;
+}
+
+.signup-form input::placeholder{
+	color: lightgray;
+}
+
+.signup-form input:focus {
+	outline: none;
+	border-bottom: 2px solid #5badc7;
+}
+
+.signup-form textarea {
+	background-color: transparent;
+	border: 1px solid #ff7f50;
+}
+
+.signup-form textarea:focus {
+	outline: 2px solid #ff7f50;
+}
+
+.signup-form input, select, textarea {
+    color: white;
+	font-size: 14px;
+}
+
+.signup-form input:invalid {
+	border-bottom: 1px solid white;
+}
+
+.submit-button {
+	position:relative;
+	width: 10rem;
+	height: 3rem;
+	border-radius: 100px;
+	border: 0;
+	cursor: pointer;
+    color: black;
+	background: rgb(221,237,144);
+    background: linear-gradient(90deg, rgba(221,237,144,1) 6%, rgba(70,199,240,1) 100%);
+	box-shadow: 0 1px 2px rgba(0,0,0,0.07), 
+                0 2px 4px rgba(0,0,0,0.07), 
+                0 4px 8px rgba(0,0,0,0.07), 
+                0 8px 16px rgba(0,0,0,0.07),
+                0 16px 32px rgba(0,0,0,0.07), 
+                0 32px 64px rgba(0,0,0,0.07);
+}
+
+.submit-button:focus{
+	outline: none;
+}
+
+.submit-button:active {
+	top: 2px;
+	left: 2px;
+}
+
+@media only screen and (max-width: 1024px) and (min-width: 900px) {
+	.signup-form {
+		max-height: 90%;
+		min-width: 50%;
+	}
+}
+
+@media only screen and (max-width: 900px) and (min-width : 500px) {
+	.signup-form {
+		max-height: 90%;
+		min-width: 60%;
+	}
+}
+
+@media only screen and (max-width: 500px) {
+	.signup-form {
+		width: 100%;
+		height: 100%;
+		border-radius: 0;
+	}
+}

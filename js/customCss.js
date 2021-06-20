@@ -14,11 +14,22 @@ customCssButton.addEventListener('click', e => {
         else {
             textArea = document.createElement('textarea');
             textArea.setAttribute('id', 'cssCode');
+            textArea.classList.add("css-editor");
             e.target.appendChild(textArea);
-            textArea.style.position = 'absolute';
-            textArea.style.left = e.target.offsetWidth + 2 + 'px';
-            textArea.style.height = '200px';
-            textArea.style.width = '200px';
+
+            if (window.screen.width > 650) {
+                textArea.style.position = 'absolute';
+                textArea.style.left = e.target.offsetWidth + 2 + 'px';
+                textArea.style.height = '200px';
+                textArea.style.width = '200px';
+            }
+            else {
+                textArea.style.position = 'fixed';
+                textArea.style.top = '2%';
+                textArea.style.left = '3%';
+                textArea.style.height = '200px';
+                textArea.style.width = '200px';
+            }
         }
     }
 
