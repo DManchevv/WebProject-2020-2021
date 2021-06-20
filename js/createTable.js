@@ -6,14 +6,15 @@ let tbl;
 cellLock.addEventListener('click', () => {
     if (currentTd != null) {
         if (currentTd.hasAttribute('contenteditable')) {
-            if (username) {
+            if (username && username != "undefined") {
+                console.log(1);
                 currentTd.setAttribute("owner", username);
+                conn.send(`loggedUserChangeCell_${username}-` + currentTd.id + "-" + "something");
             }
             currentTd.removeAttribute('contenteditable');
             currentTd.classList.add('locked-cell');
             cellLock.innerHTML = "Unlock";
             conn.send("changeClass-" + currentTd.id + "-" + currentTd.classList.value);
-            conn.send(`loggedUserChangeCell_${username}-` + currentTd.id + "-" + "something");
         } else if (currentTd.classList.contains("column-index")) { // Added by Velin
             var column = document.querySelectorAll(`.${currentTd.firstChild.nodeValue}`);
             columnLockUnlock(column);

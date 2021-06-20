@@ -17,7 +17,7 @@ const anonymous = [
 ];
 
 var username;
-
+var type;
 function isUserLoggedIn() {
     const url = "../php/currentUser.php";
     sendRequest(url, { method: 'GET' }, load, console.log);
@@ -26,6 +26,7 @@ function load(response) {
     if (response.success) {
         if (response["username"] && response["type"]) {
             username = response["username"];
+            type = response["type"];
             loadLoggedUser();
             return true;
             
@@ -33,8 +34,6 @@ function load(response) {
             return false;
         }
     } else {
-        /*var error = document.querySelector('.error');
-        error.innerHTML = response.data;*/
     }
 }
 
@@ -43,28 +42,13 @@ function loadGuestUser(id) {
 
     const randomImg = Math.floor(Math.random() * anonymous.length);
 
-    // var section = document.createElement("section");
-    // section.classList.add("user-content");
-    // section.setAttribute('id', id);
-
- 
-
-    // var text = document.createElement("figcaption");
-    // text.innerHTML = `anonymous ${anonymous[randomImg]}`;
-    // section.appendChild(text);
-
-
     var userImg = document.createElement("img");
     userImg.classList.add("user-img");
     userImg.setAttribute("src", `../images/${anonymous[randomImg]}.png`);
     userImg.setAttribute('id', id);
     userImg.style.position = "relative";
     userImg.title = `anonymous ${anonymous[randomImg]}`;
-    // imageFunctionality(userImg, text);
-
-    // section.appendChild(userImg);
     
-    // tableInfo.appendChild(section);
     tableInfo.appendChild(userImg);
 
     let icons = document.querySelectorAll('.user-img');
@@ -129,36 +113,4 @@ function goToLogin(response) {
     if (response.success) {
         window.location = "login.html";
     }
-}
-
-// function imageFunctionality(userImg, text) {
-    
-//     userImg.addEventListener("mouseenter", function(event) {
-//         text.style.width = "110px";
-//         text.style.padding = "auto";
-//         text.style.visibility = "visible";
-//         text.style.opacity = 1;
-//     });
-
-//     userImg.addEventListener("mouseleave", function(event) {
-//         text.style.visibility = "hidden";
-//     });
-// }
-
-function sendRequest(url, options, successCallback, errorCallback) { 
-    var request = new XMLHttpRequest();
-
-    request.onload = function() { 
-        var response = JSON.parse(request.responseText);
-
-        if (request.status === 200) {
-            successCallback(response);
-        } else {
-            errorCallback(response);
-        }
-    };
-
-    request.open(options.method, url, true);
-    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    request.send(options.data);
 }

@@ -86,19 +86,15 @@
             }
             // Added
             if (str_contains($strings[0], "loggedUserChangeCell")) {
-                /*$slicedFirstString = explode("_", $strings[0]);
-                $userOwner = $strings[0];
-                if (count($slicedFirstString) == 2) {
-                    $userOwner = $slicedFirstString[1];
-                }*/
                 $userOwner = explode("_", $strings[0])[1];
                 $this->cellOwner[$strings[1]] = $userOwner;
-                //print_r($this->cellOwner);
             }
 
             if ($strings[0] === "loadNewTable") {
                 $this->cells = array();
                 $this->cellsCSS = array();
+                $this->cellOwner = array();
+                $this->cellsClasses = array();
             }
             if ($strings[0] === "changeClass") {
                 $cellData = explode("-", $msg, 3); // Here we get the string separated as shown

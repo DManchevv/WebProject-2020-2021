@@ -94,6 +94,9 @@ function validateInput(input) {
             if (value.length !== 0 && value.length < 3) {
                 errorMessage = 'Username should contain 3 or more symbols';
                 return false;
+            } else if (value === "undefined") {
+                errorMessage = "Username cannot be undefined";
+                return false;
             }
             break;
         case "email":
