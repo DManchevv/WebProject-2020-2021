@@ -1,3 +1,4 @@
+// insert row
 function insertNewRow(currentRowIndexString) {
     let currentRowIndex = parseInt(currentRowIndexString);
 
@@ -34,6 +35,7 @@ function insertNewRow(currentRowIndexString) {
     }
 }
 
+// insert column
 function insertNewColumn(currentColumnIndex) {
     let columnIndex = parseInt(currentColumnIndex) + 1;
 
@@ -68,6 +70,7 @@ function insertNewColumn(currentColumnIndex) {
     }
 }
 
+// fix the following rows' indexes, cell ids, lock and custom CSS
 function fixFollowingRows(currentRowIndexString) {
     let currentRowIndex = parseInt(currentRowIndexString);
 
@@ -88,6 +91,7 @@ function fixFollowingRows(currentRowIndexString) {
     }
 }
 
+// fix the following columns' indexes, cell ids, lock and custom CSS
 function fixFollowingColumns(currentColumnIndexString) {
     let currentColumnIndex = parseInt(currentColumnIndexString);
 
@@ -108,6 +112,7 @@ function fixFollowingColumns(currentColumnIndexString) {
     }
 }
 
+// create new Cell
 function createCell(cell, text) {
     let div = document.createElement('div');
     let txt =document.createTextNode(text);

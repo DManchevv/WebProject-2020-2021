@@ -3,6 +3,7 @@ let cellLock = document.getElementById('lock-cell');
 let currentTd = null;
 let tbl;
 
+// locking cell after clicking the "Lock" button
 cellLock.addEventListener('click', () => {
     if (currentTd != null) {
         if (currentTd.hasAttribute('contenteditable')) {
@@ -40,6 +41,7 @@ cellLock.addEventListener('click', () => {
     }
 })
 
+// function for generating the table
 function tableCreate(rows, columns) {
     tbl = document.createElement('table');
     tbl.classList = "main-table";
@@ -64,9 +66,12 @@ function tableCreate(rows, columns) {
         }
     })
     
+    // create table's body
     let tbdy = document.createElement('tbody');
 
     let tr = document.createElement('tr');
+
+    // create the first row of the table
     for (let j = 0; j < columns; j++) {
         let td = document.createElement('td');
         td.classList = "column-index";
@@ -76,6 +81,7 @@ function tableCreate(rows, columns) {
 
     tbdy.appendChild(tr);
 
+    // create all other rows
     for (let i = 1; i < rows; i++) {
         let tr = document.createElement('tr');
         for (let j = 0; j < columns; j++) {
@@ -105,6 +111,7 @@ function tableCreate(rows, columns) {
                     }
                 });
 
+                // event listener for when we type in the cell
                 td.addEventListener('input', () => {
                     if (conn != null) {
                         if (td.innerText.includes("=sum(") && td.innerText.includes(")")) {
@@ -113,10 +120,12 @@ function tableCreate(rows, columns) {
                         conn.send("changeCell-" + td.id + "-" + td.innerText);
                     }
 
-                    if (!isNaN(td.innerText)) {
+                    // if the cell input is number align text right
+                    if (!isNaN(td.innerText) && td.innerText !== "") {
                         td.style.textAlign = "right";
                         conn.send("addStyle-" + td.id + "-text~align: right");
                     }
+                    // if the cell input is text align it left
                     else {
                         td.style.textAlign = "left";
                         conn.send("addStyle-" + td.id + "-text~align: left");
@@ -140,6 +149,7 @@ function tableCreate(rows, columns) {
     tableWrapper.appendChild(tbl);
 }
 
+// convert column's index as letter
 function columnToLetter(column)
 {
   let temp, letter = '';
@@ -152,6 +162,7 @@ function columnToLetter(column)
   return letter;
 }
 
+// open the context menu after right click
 function openContextMenu(td) {
     // If the menu is not opened at the moment of the click
     if (contextMenu.classList.contains("context-menu-hidden")) {
@@ -201,9 +212,11 @@ function openContextMenu(td) {
     }
 }
 
+// import csv file
 function importCSV() {
     var fileUpload = document.getElementById("fileUpload");
     var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
+
     if (regex.test(fileUpload.value.toLowerCase())) {
         if (typeof (FileReader) != "undefined") {
             var reader = new FileReader();
@@ -237,18 +250,21 @@ function removeInsertOptions(contextMenu) {
     removeInsertColumnOptions(contextMenu);
 }
 
+// remove insertRow option for columns
 function removeInsertRowOptions(contextMenu) {
     if (contextMenu.querySelector('#insert-row') != null) {
         contextMenu.removeChild(contextMenu.querySelector('#insert-row'));
     }
 }
 
+// remove insertColumn option for rows
 function removeInsertColumnOptions(contextMenu) {
     if (contextMenu.querySelector('#insert-column') != null) {
         contextMenu.removeChild(contextMenu.querySelector('#insert-column'));
     }
 }
 
+// the sum formula
 function sumFormula(td) {
 
     //console.log("sum formula");

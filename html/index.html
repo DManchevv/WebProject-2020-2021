@@ -1,256 +1,270 @@
 <!DOCTYPE html>
 <html lang="en">
+	<head>
+		<title>Online Table</title>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../css/table-styles.css" />
+		<script defer src="../js/sendRequestUtility.js"></script>
+		<script defer src="../js/createTable.js"></script>
+		<!--Moved this script here - Velin-->
+		<script defer src="../js/saveTable.js"></script>
+		<script defer src="../js/lock.js"></script>
+		<script src="../js/exportAsCSV.js"></script>
+		<script defer src="../js/getSavedTable.js"></script>
+		<script defer src="../js/newDocument.js"></script>
+		<script defer src="../js/userSpecification.js"></script>
 
-<head>
-	<title>Online Table</title>
-	<meta charset="UTF-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<link rel="stylesheet" href="../css/table-styles.css" />
-	<script defer src="../js/sendRequestUtility.js"></script>
-	<script defer src="../js/createTable.js"></script>
-	<!--Moved this script here - Velin-->
-	<script defer src="../js/saveTable.js"></script>
-	<script defer src="../js/lock.js"></script>
-	<script src="../js/exportAsCSV.js"></script>
-	<script defer src="../js/getSavedTable.js"></script>
-	<script defer src="../js/newDocument.js"></script>
-	<script defer src="../js/userSpecification.js"></script>
-	<script>
-		var conn = null;
-		var isConnected = false;
+		<!-- The client side of the client-server logic -->
+		<script>
+			var conn = null;
+			var isConnected = false;
 
-		window.addEventListener("load", () => {
-			setOffline();
-		});
-
-		function setOnline() {
-			isConnected = true;
-		}
-		function setOffline() {
-			isConnected = false;
-		}
-
-		function send() {
-			msg = document.getElementById("message").value;
-			if (msg == "") {
-				alert("Can't send an empty message");
-				return;
-			}
-			conn.send(msg);
-			document.getElementById("message").value = "";
-		}
-
-		function toggleConnect() {
-			var uri = document.getElementById("conn_str").value;
-
-			if (isConnected) {
+			// On load we set the user as not connected
+			window.addEventListener("load", () => {
 				setOffline();
-				return;
-			}
+			});
 
-			conn = new WebSocket(uri);
-
-			conn.onmessage = function (e) {
-				let text = e.data.split('-');
-				let specificClassesText = e.data.split("|");	// Because some classes contain a dash symbol
-
-				if (text[0] === "selectedCell") {
-					document.getElementById(text[1]).classList.add('foreign-selected-cell');	
-					document.getElementById(text[1]).classList.add(text[2]+text[3]);
-				}
-				else if (text[0] === "oldCell") {
-					if (document.getElementById(text[1]) != null) {
-						document.getElementById(text[1]).classList.remove('foreign-selected-cell');
-					}
-				}
-				else if (text[0] === "changeCell") {
-					document.getElementById(text[1]).innerText = text[2];
-				}
-				else if (text[0] === "insertColumn") {
-					insertNewColumn(text[1]);
-					fixFollowingColumns(text[1]);
-				}
-				else if (text[0] === "insertRow") {
-					insertNewRow(text[1]);
-					fixFollowingRows(text[1]);
-				}
-				else if (text[0] === "jsonTable") {
-					tableCreate(text[2], text[3]);
-					setContextMenus();
-					let cells = JSON.parse(text[1]);
-
-					for (key in cells) {
-						document.getElementById(key).innerText = cells[key];
-					}
-
-					let cssCode = "";
-
-					for (let i = 4; i < text.length; i++) {
-						cssCode += text[i];
-
-						if (i != text.length - 1) {
-							cssCode += "-";
-						}
-					}
-
-					let cellsCss = JSON.parse(cssCode);
-
-					for (key in cellsCss) {
-						document.getElementById(key).style.cssText = cellsCss[key];
-					}
-					isUserLoggedIn(); // Added 18.06.2021 If the user is logged in from $_SESSION
-					// then we will load the loggedUserFunctions
-
-				}
-				else if (text[0] === "loadIcons") {
-					let clients = JSON.parse(text[1]);
-
-					for (key in clients) {
-						loadGuestUser("user" + clients[key]);
-					}
-				}
-				else if (text[0] === "loadNewUserIcon") {
-					loadGuestUser(text[1]);
-				}
-				else if (text[0] === "changeCSS") {
-					let cssCode = "";
-
-					for (let i = 2; i < text.length; i++) {
-						cssCode += text[i];
-
-						if (i != text.length - 1) {
-							cssCode += "-";
-						}
-					}
-
-					document.getElementById(text[1]).style.cssText = cssCode;
-				}
-				else if (text[0] === "removeIcon") {
-					document.getElementById(text[1]).remove();
-
-					let currentIcons = document.querySelectorAll('.user-img');
-
-					for (let i = 0; i < currentIcons.length; i++) {
-						currentIcons[currentIcons.length - 1 - i].style.position = "relative";
-						currentIcons[currentIcons.length - 1 - i].style.right = `${-25*i}px`;
-					}
-				}
-				else if (text[0] === "removeActiveCell") {
-					if (document.querySelector('.' + text[1]+text[2]) != null) {
-						document.querySelector('.' + text[1]+text[2]).classList.remove('foreign-selected-cell');
-					}
-				}
-				else if (text[0] === "addStyle") {
-					let cssCode = text[2].replace(/~/g, "-");
-
-					document.getElementById(text[1]).style.cssText += cssCode;
-				}
-				// ---------------
-				else if (text[0] === "loadCellOwners") {	// Added 19.06.2021
-						//console.log(1);
-						let cellsOwner = JSON.parse(text[1]);
-						for (key in cellsOwner) {
-							var cell = document.querySelector(`#${key}`);
-							cell.setAttribute("owner", cellsOwner[key]);
-							cell.removeAttribute("contenteditable");
-						}
-				}
-				else if (text[0] === "loadNewTable") {
-					cleanTable();
-				}
-				else if (text[0] === "loadSavedTable") {
-					loadSave();
-				} 
-				else if (text[0] === "changeClass") {
-					var id = text[1];
-					var currentCellClass = "";
-					for (let i = 2; i < text.length; i++) {
-						currentCellClass += text[i];
-
-						if (i != text.length - 1) {
-							currentCellClass += "-";
-						}
-					}
-					var cell = document.querySelector(`#${id}`);
-					cell.classList = currentCellClass;
-					if (currentCellClass.includes("locked-cell")) {
-						cell.removeAttribute("contenteditable");
-					} else if (!cell.hasAttribute("contenteditable")){
-						cell.setAttribute("contenteditable", "");
-					}
-				}
-				else if (specificClassesText[0] === "loadCellClasses") {
-					let cellsClasses = JSON.parse(specificClassesText[1]);
-					for (key in cellsClasses) {
-						var cell = document.querySelector(`#${key}`);
-						cell.classList = cellsClasses[key];
-						if (cellsClasses[key].includes("locked-cell")) {
-							cell.removeAttribute("contenteditable");
-						}
-					}
-				}
-				if (text[0].includes("loggedUserChangeCell")) {	// Added 18.06.2021
-					var currentCell = document.querySelector(`#${text[1]}`);
-					let userOwner = text[0].split('_')[1];
-					//console.log(userOwner);
-					if (text[2].length > 0) {
-						currentCell.removeAttribute("contenteditable");
-						currentCell.setAttribute("owner", userOwner);
-					} else if (text[2].length === 0) {
-						currentCell.setAttribute("contenteditable", "");
-						currentCell.removeAttribute("owner");
-					}
-				}
-					// ----------------
-			}
-
-			conn.onopen = function (e) {
-				setOnline();
-				console.log("Connected");
+			function setOnline() {
 				isConnected = true;
-			};
+			}
+			function setOffline() {
+				isConnected = false;
+			}
 
-			conn.onclose = function (e) {
-				console.log("Disconnected");
-				setOffline();
-			};
+			// When switching between online and offline
 
-			conn.onerror = function (e) {
-				console.log("error");
-			};
-		}
+			function toggleConnect() {
+				
+				var uri = document.getElementById("conn_str").value;
 
-		window.onload = toggleConnect;
-	</script>
-</head>
+				if (isConnected) {
+					setOffline();
+					return;
+				}
 
-<body>
-	<nav class="page-header">
-		<ul class="nav-list">
-			<li class="new-document"><button id="new-document" class="table-button">New Document</button></li>
-			<li class="upload-file-wrapper">
-				<input type="file" id="fileUpload" class="input-file" onchange="importCSV()" />
-			</li>
-			<li><button id="save" class="table-button">Save</button></li>
-			<li><button onclick="exportTableToCSV('table.csv')" class="table-button export">Export as CSV</button></li>
-			<li><button id="register-btn" class="register-btn"><a href="register.html" class="table-button">Register</a></button></li>
-			<li><button id="login-btn" class="login-btn"><a href="login.html" class="table-button">Log In</a></button></li>
-			<li class="icons"><aside id="table-info" class="table-info"></aside></li>
-		</ul>
-	</nav>
-	<header>
-		<!--Added this header with elements inside - Velin-->
-		<div class="ip">Server IP: <input type="text" id="conn_str" value='ws://192.168.0.106:8090' readonly /></div>
-	</header>
-	<div class="context-menu context-menu-hidden" id="context-menu">
-		<span id="lock-cell">Lock</span>
-		<span id="custom-css">Custom CSS</span>
-	</div>
-	<div id="tableWrapper"></div>
-	<script src="../js/customCss.js"></script>
-	<script src="../js/fixRowsAndColumns.js"></script>
-	<script src="../js/fixNavBarOnLowRes.js"></script>
-</body>
+				conn = new WebSocket(uri);
 
+				// function, which is triggered when the server sends message to the client
+				conn.onmessage = function (e) {
+					let text = e.data.split('-');
+					let specificClassesText = e.data.split("|");	// Because some classes contain a dash symbol
+
+					// mark the following cell as used by another user
+					if (text[0] === "selectedCell") {
+						document.getElementById(text[1]).classList.add('foreign-selected-cell');	
+						document.getElementById(text[1]).classList.add(text[2]+text[3]);
+					}
+					//  mark the old cell that was used by the user as not used
+					else if (text[0] === "oldCell") {
+						if (document.getElementById(text[1]) != null) {
+							document.getElementById(text[1]).classList.remove('foreign-selected-cell');
+						}
+					}
+					// change the cell's text
+					else if (text[0] === "changeCell") {
+						document.getElementById(text[1]).innerText = text[2];
+					}
+					// insert new column
+					else if (text[0] === "insertColumn") {
+						insertNewColumn(text[1]);
+						fixFollowingColumns(text[1]);
+					}
+					// insert new row
+					else if (text[0] === "insertRow") {
+						insertNewRow(text[1]);
+						fixFollowingRows(text[1]);
+					}
+					// if we are not the first connected user load the table as the connected users see it
+					else if (text[0] === "jsonTable") {
+						tableCreate(text[2], text[3]);
+						setContextMenus();
+						let cells = JSON.parse(text[1]);
+
+						for (key in cells) {
+							document.getElementById(key).innerText = cells[key];
+						}
+
+						let cssCode = "";
+
+						for (let i = 4; i < text.length; i++) {
+							cssCode += text[i];
+
+							if (i != text.length - 1) {
+								cssCode += "-";
+							}
+						}
+
+						let cellsCss = JSON.parse(cssCode);
+
+						for (key in cellsCss) {
+							document.getElementById(key).style.cssText = cellsCss[key];
+						}
+						isUserLoggedIn(); // Added 18.06.2021 If the user is logged in from $_SESSION
+						// then we will load the loggedUserFunctions
+
+					}
+					// load the connected users' icons
+					else if (text[0] === "loadIcons") {
+						let clients = JSON.parse(text[1]);
+
+						for (key in clients) {
+							loadGuestUser("user" + clients[key]);
+						}
+					}
+					// load the newly connected user's icon
+					else if (text[0] === "loadNewUserIcon") {
+						loadGuestUser(text[1]);
+					}
+					// change cell's CSS
+					else if (text[0] === "changeCSS") {
+						let cssCode = "";
+
+						for (let i = 2; i < text.length; i++) {
+							cssCode += text[i];
+
+							if (i != text.length - 1) {
+								cssCode += "-";
+							}
+						}
+
+						document.getElementById(text[1]).style.cssText = cssCode;
+					}
+					// remove the icon of disconnected user
+					else if (text[0] === "removeIcon") {
+						document.getElementById(text[1]).remove();
+
+						let currentIcons = document.querySelectorAll('.user-img');
+
+						for (let i = 0; i < currentIcons.length; i++) {
+							currentIcons[currentIcons.length - 1 - i].style.position = "relative";
+							currentIcons[currentIcons.length - 1 - i].style.right = `${-25*i}px`;
+						}
+					}
+					// remove the cell that was selected by disconnecting user
+					else if (text[0] === "removeActiveCell") {
+						if (document.querySelector('.' + text[1]+text[2]) != null) {
+							document.querySelector('.' + text[1]+text[2]).classList.remove('foreign-selected-cell');
+						}
+					}
+					// add CSS style to a cell
+					else if (text[0] === "addStyle") {
+						let cssCode = text[2].replace(/~/g, "-");
+
+						document.getElementById(text[1]).style.cssText += cssCode;
+					}
+					// loads the user of every cell
+					else if (text[0] === "loadCellOwners") {	// Added 19.06.2021
+							let cellsOwner = JSON.parse(text[1]);
+							for (key in cellsOwner) {
+								var cell = document.querySelector(`#${key}`);
+								cell.setAttribute("owner", cellsOwner[key]);
+								cell.removeAttribute("contenteditable");
+							}
+					}
+					// clean the table and generate empty one
+					else if (text[0] === "loadNewTable") {
+						cleanTable();
+					}
+					// load information from saved table
+					else if (text[0] === "loadSavedTable") {
+						loadSave();
+					} 
+					// change cell's class
+					else if (text[0] === "changeClass") {
+						var id = text[1];
+						var currentCellClass = "";
+						for (let i = 2; i < text.length; i++) {
+							currentCellClass += text[i];
+
+							if (i != text.length - 1) {
+								currentCellClass += "-";
+							}
+						}
+						var cell = document.querySelector(`#${id}`);
+						cell.classList = currentCellClass;
+						if (currentCellClass.includes("locked-cell")) {
+							cell.removeAttribute("contenteditable");
+						} else if (!cell.hasAttribute("contenteditable")){
+							cell.setAttribute("contenteditable", "");
+						}
+					}
+					// load every cell's classes
+					else if (specificClassesText[0] === "loadCellClasses") {
+						let cellsClasses = JSON.parse(specificClassesText[1]);
+						for (key in cellsClasses) {
+							var cell = document.querySelector(`#${key}`);
+							cell.classList = cellsClasses[key];
+							if (cellsClasses[key].includes("locked-cell")) {
+								cell.removeAttribute("contenteditable");
+							}
+						}
+					}
+					// when registered user starts typing in a cell, it locks for all other users
+					if (text[0].includes("loggedUserChangeCell")) {	// Added 18.06.2021
+						var currentCell = document.querySelector(`#${text[1]}`);
+						let userOwner = text[0].split('_')[1];
+
+						if (text[2].length > 0) {
+							currentCell.removeAttribute("contenteditable");
+							currentCell.setAttribute("owner", userOwner);
+						} else if (text[2].length === 0) {
+							currentCell.setAttribute("contenteditable", "");
+							currentCell.removeAttribute("owner");
+						}
+					}
+				}
+
+				// when the user connects to the socket
+				conn.onopen = function (e) {
+					setOnline();
+					console.log("Connected");
+					isConnected = true;
+				};
+
+				// when the user disconnects from the socket
+				conn.onclose = function (e) {
+					console.log("Disconnected");
+					setOffline();
+				};
+
+				// when error occurs
+				conn.onerror = function (e) {
+					console.log("error");
+				};
+			}
+
+			// on window load start toggleConnect function
+			window.onload = toggleConnect;
+		</script>
+	</head>
+
+	<body>
+		<nav class="page-header">
+			<ul class="nav-list">
+				<li class="new-document"><button id="new-document" class="table-button">New Document</button></li>
+				<li class="upload-file-wrapper">
+					<input type="file" id="fileUpload" class="input-file" onchange="importCSV()" />
+				</li>
+				<li><button id="save" class="table-button">Save</button></li>
+				<li><button onclick="exportTableToCSV('table.csv')" class="table-button export">Export as CSV</button></li>
+				<li><button id="register-btn" class="register-btn"><a href="register.html" class="table-button">Register</a></button></li>
+				<li><button id="login-btn" class="login-btn"><a href="login.html" class="table-button">Log In</a></button></li>
+				<li class="icons"><aside id="table-info" class="table-info"></aside></li>
+			</ul>
+		</nav>
+		<header>
+			<!--Added this header with elements inside - Velin-->
+			<div class="ip">Server IP: <input type="text" id="conn_str" value='ws://109.121.242.75:8090' readonly /></div>
+		</header>
+		<div class="context-menu context-menu-hidden" id="context-menu">
+			<span id="lock-cell">Lock</span>
+			<span id="custom-css">Custom CSS</span>
+		</div>
+		<div id="tableWrapper"></div>
+		<script src="../js/customCss.js"></script>
+		<script src="../js/fixRowsAndColumns.js"></script>
+		<script src="../js/fixNavBarOnLowRes.js"></script>
+	</body>
 </html>

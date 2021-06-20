@@ -1,5 +1,3 @@
-//import { User } from './user.js';
-
 (function() {
 
     var submitInput = document.getElementById("register");

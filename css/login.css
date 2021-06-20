@@ -13,7 +13,7 @@ body {
 	margin: 0;
 }
 
-.signup-form {
+.signin-form {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -36,38 +36,38 @@ body {
               0 16px 16px rgba(0,0,0,0.12);
 }
 
-.signup-form-header {
+.signin-form-header {
 	font-size: 30px; 
 	margin: 0; 
 	margin-bottom: 1em;
 }
 
-.signup-form-textarea {
+.signin-form-textarea {
 	background-color:transparent;
 }
 
-.signup-form input {
+.signin-form input {
 	border: 0;
 	background-color: transparent;
 	border-bottom: 2px solid #65aba4;
 	height: 2rem;
 }
 
-.signup-form input::placeholder{
+.signin-form input::placeholder{
 	color: lightgray;
 }
 
-.signup-form input:focus {
+.signin-form input:focus {
 	outline: none;
 	border-bottom: 2px solid #5badc7;
 }
 
-.signup-form input {
+.signin-form input {
     color: white;
 	font-size: 14px;
 }
 
-.signup-form input:invalid {
+.signin-form input:invalid {
 	border-bottom: 1px solid white;
 }
 
@@ -112,23 +112,30 @@ p a:hover {
 
 
 @media only screen and (max-width: 1024px) and (min-width: 900px) {
-	.signup-form {
+	.signin-form {
 		max-height: 90%;
 		min-width: 50%;
 	}
 }
 
 @media only screen and (max-width: 900px) and (min-width : 500px) {
-	.signup-form {
+	.signin-form {
 		max-height: 90%;
 		min-width: 60%;
 	}
 }
 
 @media only screen and (max-width: 500px) {
-	.signup-form {
+	.signin-form {
 		width: 100%;
 		height: 100%;
 		border-radius: 0;
+		padding: 15px;
+		gap: 40px;
+		justify-content: space-evenly;
+	}
+
+	.submit-button {
+		min-height: 45px;
 	}
 }

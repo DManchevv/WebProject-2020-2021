@@ -1,3 +1,4 @@
+// export table as CSV
 function exportTableToCSV(filename) {
     var csv = [];
     var rows = document.querySelectorAll("table tr");
@@ -15,6 +16,7 @@ function exportTableToCSV(filename) {
     downloadCSV(csv.join("\n"), filename);
 }
 
+// download CSV
 function downloadCSV(csv, filename) {
     var csvFile;
     var downloadLink;

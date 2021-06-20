@@ -67,7 +67,7 @@ function loadGuestUser(id) {
 function loadLoggedUser() {
     let registerBtn = document.querySelector("#register-btn");
     let loginBtn = document.querySelector("#login-btn");
-
+    let importButton = document.querySelector('.upload-file-wrapper');
     let navBar = document.querySelector('.nav-list');
 
     navBar.removeChild(registerBtn.parentElement);
@@ -82,6 +82,10 @@ function loadLoggedUser() {
     logout.classList.add('logout-btn');
     logout.addEventListener("click", logoutUser);
     logout.innerText = "Logout";
+
+    if (type !== "Administrator") {
+        navBar.removeChild(importButton);
+    }
 
     newLi.appendChild(logout);
     navBar.insertBefore(newLi, icons);
@@ -106,11 +110,11 @@ function loadLoggedUser() {
 function logoutUser() {
     const url = "../php/logout.php";
 
-    sendRequest(url, { method: 'POST' }, goToLogin, console.log);
+    sendRequest(url, { method: 'POST' }, goToIndex, console.log);
 }
 
-function goToLogin(response) {
+function goToIndex(response) {
     if (response.success) {
-        window.location = "login.html";
+        window.location = "index.html";
     }
 }

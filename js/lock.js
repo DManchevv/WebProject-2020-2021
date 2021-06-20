@@ -1,3 +1,5 @@
+// set columns' and rows' context menus
+
 function setContextMenus() {
     var rows = document.querySelectorAll(".row-index");
     var columns = document.querySelectorAll(".column-index");
@@ -16,6 +18,7 @@ function setContextMenus() {
     });
 };
 
+// open column's context menu
 function openColumnContextMenu(element) {
     if (contextMenu.classList.contains("context-menu-hidden")) {
         currentTd = element;
@@ -73,6 +76,7 @@ function fixUpColumns(element) {
     });
 }
 
+// open row's context menu
 function openRowContextMenu(element) {
     if (contextMenu.classList.contains("context-menu-hidden")) {
         currentTd = element;
@@ -127,6 +131,7 @@ function fixUpRows(element) {
     });
 }
 
+// locking the whole column
 function columnLockUnlock(column) {
     if (currentTd.classList.contains("columns-locked")) {
         currentTd.classList.remove("columns-locked");
@@ -149,6 +154,7 @@ function columnLockUnlock(column) {
     }
 }
 
+// locking the whole row
 function rowLockUnlock(row) {
     if (currentTd.classList.contains("rows-locked")) {
         currentTd.classList.remove("rows-locked");

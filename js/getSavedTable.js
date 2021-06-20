@@ -1,23 +1,11 @@
-(function () {
-    
-
-    // var tableCells = document.querySelectorAll(".table-cell");
-
-    // tableCells.forEach(element => {
-    //     const elementID = {
-    //         id: element.id
-    //     };
-    //     // for every table-cell request the data for this cell
-    //     //sendRequest(url, { method: 'POST', data: `data=${JSON.stringify(elementID)}` }, loadSavedTable, console.log);
-    // });
-    
-})();
+// request for saved table's information
 
 function loadSave() {
     const url = "../php/getCellData.php";
     sendRequest(url, { method: 'GET' }, loadSavedTable, console.log);
 }
 
+// load saved table information
 function loadSavedTable(response) {
     if (response.success) {
         if (response.data) {
@@ -25,7 +13,6 @@ function loadSavedTable(response) {
             response.data.forEach(cellData => {
                 var tableCell = document.querySelector(`#${cellData.id}`);
                 if (tableCell) {
-                    //console.log(tableCell);
                     tableCell.classList = cellData.class;
                     if (cellData.class.includes("locked-cell")) {
 						tableCell.removeAttribute("contenteditable");
@@ -44,16 +31,7 @@ function loadSavedTable(response) {
                         conn.send("changeCSS-" + cellData.id + "-" + cellData.style);
                     }
                 }
-                //i++;
-                // for every table-cell request the data for this cell
-                //sendRequest(url, { method: 'POST', data: `data=${JSON.stringify(elementID)}` }, loadSavedTable, console.log);
             });
-
-            // then load the data again
-            /*var cellData = response.data;
-            var tableCell = document.querySelector(`#${cellData.id}`);
-            tableCell.classList = cellData.class;
-            tableCell.innerHTML = cellData.innervalue;*/
         }
     } else {
         console.log(response);

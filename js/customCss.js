@@ -4,6 +4,7 @@ let column;
 let row;
 let lastTdNodeValue;
 
+// open the textArea after clicking "CustomCSS" button
 customCssButton.addEventListener('click', e => {
     if (e.target.getAttribute('id') === 'custom-css') {
         if (e.target.childNodes.length > 1) {
@@ -50,24 +51,28 @@ customCssButton.addEventListener('click', e => {
     
 });
 
+// close css editor
 function closeTextArea(textArea) {
     if (textArea != null) {
         textArea.style.display = 'none';
     }
 }
 
+// format the whole column
 function columnFormatCss() {
     column.forEach(el => {
         showAllPreview(el);
     });
 }
 
+// format the whole row
 function rowFormatCss() {
     row.forEach(el => {
         showAllPreview(el);
     });
 }
 
+// helper function for formatiing whole row/column
 function showAllPreview(cell) {
     let cssCode = document.getElementById('cssCode').value;
     cssCode = cssCode.toString().replace(/\n/g, '');
@@ -81,6 +86,7 @@ function showAllPreview(cell) {
     }
 }
 
+// format a single cell
 function showPreview() {
     if (currentTd != null) {
         let cssCode = document.getElementById('cssCode').value;
