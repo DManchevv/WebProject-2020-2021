@@ -6,9 +6,14 @@ let tbl;
 cellLock.addEventListener('click', () => {
     if (currentTd != null) {
         if (currentTd.hasAttribute('contenteditable')) {
+            if (username) {
+                currentTd.setAttribute("owner", username);
+            }
             currentTd.removeAttribute('contenteditable');
             currentTd.classList.add('locked-cell');
             cellLock.innerHTML = "Unlock";
+            conn.send("changeClass-" + currentTd.id + "-" + currentTd.classList.value);
+            conn.send(`loggedUserChangeCell_${username}-` + currentTd.id + "-" + "something");
         } else if (currentTd.classList.contains("column-index")) { // Added by Velin
             var column = document.querySelectorAll(`.${currentTd.firstChild.nodeValue}`);
             columnLockUnlock(column);
@@ -18,9 +23,18 @@ cellLock.addEventListener('click', () => {
             rowLockUnlock(row);
         }
         else {
-            currentTd.setAttribute('contenteditable', "");
-            currentTd.classList.remove('locked-cell');
-            cellLock.innerHTML = "Lock";
+            // Checks to see if there is a user owning the current cell
+            if (!currentTd.hasAttribute("owner") || currentTd.getAttribute("owner") === username) {
+                if (currentTd.hasAttribute("owner")) {
+                    currentTd.removeAttribute("owner");
+                }
+                currentTd.setAttribute('contenteditable', "");
+                currentTd.classList.remove('locked-cell');
+                cellLock.innerHTML = "Lock";
+                conn.send("changeClass-" + currentTd.id + "-" + currentTd.classList.value);
+                // Here we don't send anything as a third info so that we delete the owner
+                conn.send(`loggedUserChangeCell_${username}-` + currentTd.id + "-" + "");
+            }
         }
     }
 })

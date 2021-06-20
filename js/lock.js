@@ -131,16 +131,10 @@ function columnLockUnlock(column) {
     if (currentTd.classList.contains("columns-locked")) {
         currentTd.classList.remove("columns-locked");
         column.forEach(el => {
-            /*if (el.hasAttribute("contenteditable")) {
-                el.removeAttribute('contenteditable');
-                el.classList.add('locked-cell');
-                cellLock.innerHTML = "Unlock";
-            }*/
-            //else {
-                el.setAttribute('contenteditable', "");
-                el.classList.remove('locked-cell');
-                cellLock.innerHTML = "Lock";
-            //}
+            el.setAttribute('contenteditable', "");
+            el.classList.remove('locked-cell');
+            cellLock.innerHTML = "Lock";
+            conn.send("changeClass-" + el.id + "-" + el.classList.value);
         });
     } else {
         currentTd.classList.add("columns-locked");
@@ -149,12 +143,8 @@ function columnLockUnlock(column) {
                 el.removeAttribute('contenteditable');
                 el.classList.add('locked-cell');
                 cellLock.innerHTML = "Unlock";
+                conn.send("changeClass-" + el.id + "-" + el.classList.value);
             }
-            /*else {
-                el.setAttribute('contenteditable', "");
-                el.classList.remove('locked-cell');
-                cellLock.innerHTML = "Lock";
-            }*/
         });
     }
 }
@@ -166,15 +156,11 @@ function rowLockUnlock(row) {
             if (el.classList.contains("row-index")) {
                 return;
             }
-            /*if (el.hasAttribute("contenteditable")) {
-                el.removeAttribute('contenteditable');
-                el.classList.add('locked-cell');
-                cellLock.innerHTML = "Unlock";
-            }*/
             else {
                 el.setAttribute('contenteditable', "");
                 el.classList.remove('locked-cell');
                 cellLock.innerHTML = "Lock";
+                conn.send("changeClass-" + el.id + "-" + el.classList.value);
             }
         });
     } else {
@@ -187,12 +173,8 @@ function rowLockUnlock(row) {
                 el.removeAttribute('contenteditable');
                 el.classList.add('locked-cell');
                 cellLock.innerHTML = "Unlock";
+                conn.send("changeClass-" + el.id + "-" + el.classList.value);
             }
-            /*else {
-                el.setAttribute('contenteditable', "");
-                el.classList.remove('locked-cell');
-                cellLock.innerHTML = "Lock";
-            }*/
         });
     }
 }

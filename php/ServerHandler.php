@@ -86,6 +86,11 @@
             }
             // Added
             if (str_contains($strings[0], "loggedUserChangeCell")) {
+                /*$slicedFirstString = explode("_", $strings[0]);
+                $userOwner = $strings[0];
+                if (count($slicedFirstString) == 2) {
+                    $userOwner = $slicedFirstString[1];
+                }*/
                 $userOwner = explode("_", $strings[0])[1];
                 $this->cellOwner[$strings[1]] = $userOwner;
                 //print_r($this->cellOwner);
