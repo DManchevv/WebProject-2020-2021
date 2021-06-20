@@ -107,6 +107,9 @@ function tableCreate(rows, columns) {
 
                 td.addEventListener('input', () => {
                     if (conn != null) {
+                        if (td.innerText.includes("=sum(") && td.innerText.includes(")")) {
+                            sumFormula(td);
+                        }
                         conn.send("changeCell-" + td.id + "-" + td.innerText);
                     }
 
@@ -244,4 +247,34 @@ function removeInsertColumnOptions(contextMenu) {
     if (contextMenu.querySelector('#insert-column') != null) {
         contextMenu.removeChild(contextMenu.querySelector('#insert-column'));
     }
+}
+
+function sumFormula(td) {
+
+    //console.log("sum formula");
+    var cellsIds = td.innerText.split("=sum(");
+    cellsIds = cellsIds[1].split(")");
+    cellsIds = cellsIds[0].split(",");
+    var sum = 0;
+    cellsIds.forEach(id => {
+        try {
+            if (!isNaN(id) && !isNaN(parseFloat(id.trim()))) {  // This should be first because the try catch will get the else if part and skip this one
+                console.log("sum");
+                sum += parseFloat(id);
+                td.innerText= sum;
+            }
+            else if (document.querySelector(`#${id.trim()}`)) {
+                var currentCellValue = document.querySelector(`#${id.trim()}`).innerText;
+                if (!isNaN(currentCellValue) && !isNaN(parseFloat(currentCellValue))) {
+                    var valueAsNumber = parseFloat(currentCellValue);
+                    sum += valueAsNumber;
+                    //console.log(sum);
+                    td.innerText = sum;
+                }
+                //console.log(parseFloat(currentCellValue) + parseFloat("1"));
+            }
+        } catch(err) {
+            
+        }
+    });
 }

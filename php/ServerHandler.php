@@ -87,7 +87,9 @@
             // Added
             if (str_contains($strings[0], "loggedUserChangeCell")) {
                 $userOwner = explode("_", $strings[0])[1];
-                $this->cellOwner[$strings[1]] = $userOwner;
+                if ($userOwner !== "undefined") {
+                    $this->cellOwner[$strings[1]] = $userOwner;
+                }
             }
 
             if ($strings[0] === "loadNewTable") {
