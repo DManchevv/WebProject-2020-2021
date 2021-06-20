@@ -60,7 +60,9 @@
 					document.getElementById(text[1]).classList.add(text[2]+text[3]);
 				}
 				else if (text[0] === "oldCell") {
-					document.getElementById(text[1]).classList.remove('foreign-selected-cell');
+					if (document.getElementById(text[1]) != null) {
+						document.getElementById(text[1]).classList.remove('foreign-selected-cell');
+					}
 				}
 				else if (text[0] === "changeCell") {
 					document.getElementById(text[1]).innerText = text[2];

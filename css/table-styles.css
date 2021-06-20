@@ -116,7 +116,7 @@ input[type="file"] {
 }
 
 .foreign-selected-cell {
-    border: 1px solid green;
+    border: 1px solid#8a1717;
     outline: none;
 }
 
