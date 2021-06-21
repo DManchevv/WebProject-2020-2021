@@ -1,3 +1,4 @@
+// All of the user icons
 const anonymous = [
     "bird", 
     "crocodile", 
@@ -16,12 +17,17 @@ const anonymous = [
     "zebra"    
 ];
 
+// global variables needed to be used in some of the functionality
 var username;
 var type;
+
+// Checks wether a user is logged in or has entered as a guest
 function isUserLoggedIn() {
     const url = "../php/currentUser.php";
     sendRequest(url, { method: 'GET' }, load, console.log);
 }
+
+// if a user is logged we get their info
 function load(response) {
     if (response.success) {
         if (response["username"] && response["type"]) {
@@ -37,6 +43,8 @@ function load(response) {
     }
 }
 
+// if the user is a guest we add their functionality
+// loads ther icon
 function loadGuestUser(id) {
     var tableInfo = document.querySelector("#table-info");
 
@@ -64,6 +72,13 @@ function loadGuestUser(id) {
     }
 }
 
+// if the user is logged in we load their functionality
+// removes login and register buttons and adds a logout button
+// add a specific event listener for an input
+// when the logged user types in a cell the cell is locket to all other users
+// and receives an attribute "owner"
+
+// If we are an administrator we get the import button for csv import.
 function loadLoggedUser() {
     let registerBtn = document.querySelector("#register-btn");
     let loginBtn = document.querySelector("#login-btn");
@@ -107,6 +122,7 @@ function loadLoggedUser() {
     });
 }
 
+// Standard logout function the current $_SESSION is unset and destroyed thus our user is logged out
 function logoutUser() {
     const url = "../php/logout.php";
 

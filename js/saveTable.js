@@ -4,6 +4,8 @@
     save.addEventListener("click", saveTable);
 })();
 
+// Saves everything from all the cells in the database
+// This includes cell id, cell classes, cell inner text, cell owner and cell style
 function saveTable() {
 
     var cleanTableUrl = "../php/cleanTabledb.php";

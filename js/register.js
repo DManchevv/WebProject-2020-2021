@@ -8,6 +8,7 @@ var errorMessage = "";
 var doesUserExist = false;
 var isValidationSuccessful = true;
 
+// validates registration, if everything is ok we send post request to register.php
 function submitForm(event) {
 
     event.preventDefault();
