@@ -122,6 +122,8 @@
                 $this->cellsCSS = array();
                 $this->cellOwner = array();
                 $this->cellsClasses = array();
+                $this->rowsNumber = 30;
+                $this->columnsNumber = 30;
             }
             // change cell's class
             if ($strings[0] === "changeClass") {

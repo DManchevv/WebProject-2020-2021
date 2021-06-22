@@ -8,7 +8,6 @@ cellLock.addEventListener('click', () => {
     if (currentTd != null) {
         if (currentTd.hasAttribute('contenteditable')) {
             if (username && username != "undefined") {
-                console.log(1);
                 currentTd.setAttribute("owner", username);
                 conn.send(`loggedUserChangeCell_${username}-` + currentTd.id + "-" + "something");
             }
