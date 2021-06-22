@@ -7,11 +7,12 @@
         private $selectCellByID;
 
         public function __construct() {
-            $type = "mysql";
-            $host = "localhost";
-            $name = "webproject";
-            $user = "root";
-            $pass = "";
+            $config = parse_ini_file("../config/config.ini", true);
+            $type = $config["db"]["type"];
+            $host = $config["db"]["host"];
+            $name = $config["db"]["name"];
+            $user = $config["db"]["user"];
+            $pass = $config["db"]["pass"];
 
             $this->init($type, $host, $name, $user, $pass);
         }

@@ -30,17 +30,27 @@ function isUserLoggedIn() {
 // if a user is logged we get their info
 function load(response) {
     if (response.success) {
+        let importButton = document.querySelector('.upload-file-wrapper');
         if (response["username"] && response["type"]) {
             username = response["username"];
             type = response["type"];
             loadLoggedUser();
+            
+            if (type !== "Administrator") {
+                importButton.parentNode.removeChild(importButton);
+            }
             return true;
             
         } else {
+            
+            if (type !== "Administrator") {
+                importButton.parentNode.removeChild(importButton);
+            }
             return false;
         }
     } else {
     }
+
 }
 
 // if the user is a guest we add their functionality
@@ -98,9 +108,9 @@ function loadLoggedUser() {
     logout.addEventListener("click", logoutUser);
     logout.innerText = "Logout";
 
-    if (type !== "Administrator") {
-        navBar.removeChild(importButton);
-    }
+    // if (type !== "Administrator") {
+    //     navBar.removeChild(importButton);
+    // }
 
     newLi.appendChild(logout);
     navBar.insertBefore(newLi, icons);

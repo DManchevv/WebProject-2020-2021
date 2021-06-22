@@ -267,7 +267,6 @@ function removeInsertColumnOptions(contextMenu) {
 // the sum formula
 function sumFormula(td) {
 
-    //console.log("sum formula");
     var cellsIds = td.innerText.split("=sum(");
     cellsIds = cellsIds[1].split(")");
     cellsIds = cellsIds[0].split(",");
@@ -275,7 +274,6 @@ function sumFormula(td) {
     cellsIds.forEach(id => {
         try {
             if (!isNaN(id) && !isNaN(parseFloat(id.trim()))) {  // This should be first because the try catch will get the else if part and skip this one
-                console.log("sum");
                 sum += parseFloat(id);
                 td.innerText= sum;
             }
@@ -284,10 +282,8 @@ function sumFormula(td) {
                 if (!isNaN(currentCellValue) && !isNaN(parseFloat(currentCellValue))) {
                     var valueAsNumber = parseFloat(currentCellValue);
                     sum += valueAsNumber;
-                    //console.log(sum);
                     td.innerText = sum;
                 }
-                //console.log(parseFloat(currentCellValue) + parseFloat("1"));
             }
         } catch(err) {
             
