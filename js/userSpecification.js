@@ -43,7 +43,7 @@ function load(response) {
             
         } else {
             
-            if (type !== "Administrator") {
+            if (type !== "Administrator" && importButton !== null) {
                 importButton.parentNode.removeChild(importButton);
             }
             return false;
