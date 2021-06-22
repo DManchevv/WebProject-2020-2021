@@ -13,6 +13,8 @@ WebProject
  |--- database
  |     |
  |     |--- webproject.sql
+ |     |
+ |     |--- config.ini
  |
  |--- html
  |     |
@@ -111,6 +113,7 @@ table-styles.css - css на index html
 database - папка съдържаща sql файл за създаване на БД
 
 webproject.sql - sql за създаване на БД
+config.ini - конфигурационен файл за връзка с БД
 
 ----------------------------------------------------------------------------------------
 html - папка съдържаща всички html файлове

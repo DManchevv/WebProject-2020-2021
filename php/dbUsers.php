@@ -7,7 +7,7 @@
         private $selectUserTypeByID;
 
         public function __construct() {
-            $config = parse_ini_file("../config/config.ini", true);
+            $config = parse_ini_file("../database/config.ini", true);
             $type = $config["db"]["type"];
             $host = $config["db"]["host"];
             $name = $config["db"]["name"];

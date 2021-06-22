@@ -1,9 +1,8 @@
 // insert row
 function insertNewRow(currentRowIndexString) {
     let currentRowIndex = parseInt(currentRowIndexString);
-
     let newRow = tbl.insertRow(currentRowIndex + 1);
-
+    
     for (let i = 0; i < tbl.rows[currentRowIndex].cells.length; i++) {
         let newCell = newRow.insertCell(i);
         if (i != 0) {

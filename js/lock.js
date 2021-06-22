@@ -55,7 +55,7 @@ function fixUpColumns(element) {
         insertColumn.setAttribute('id','insert-column');
         insertColumn.textContent = "Insert column";
         insertColumn.addEventListener('click', e => {
-            let currentColumn = e.target.parentElement.parentElement;
+            let currentColumn = currentTd;
             conn.send("insertColumn-"+currentColumn.cellIndex);
             insertNewColumn(currentColumn.cellIndex);
             fixFollowingColumns(currentColumn.cellIndex);
@@ -107,7 +107,7 @@ function fixUpRows(element) {
         insertRow.setAttribute('id','insert-row');
         insertRow.textContent = "Insert row";
         insertRow.addEventListener('click', e => {
-            let currentRow = e.target.parentElement.parentElement.parentElement;
+            let currentRow = currentTd.parentElement;
             conn.send("insertRow-"+currentRow.rowIndex);
             insertNewRow(currentRow.rowIndex);
             fixFollowingRows(currentRow.rowIndex);
